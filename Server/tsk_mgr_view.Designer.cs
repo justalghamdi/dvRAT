@@ -96,7 +96,7 @@ namespace dvrat
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle5;
-            this.dataGridView1.Size = new System.Drawing.Size(601, 450);
+            this.dataGridView1.Size = new System.Drawing.Size(236, 450);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseMove);
             // 
@@ -134,7 +134,7 @@ namespace dvrat
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(601, 450);
+            this.ClientSize = new System.Drawing.Size(236, 450);
             this.Controls.Add(this.dataGridView1);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;

