@@ -58,7 +58,7 @@ namespace dvrat
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "console_form";
-            this.Text = "D E V I L CONSOLE v0.1";
+            this.Text = "D E V I L CONSOLE";
             this.Load += new System.EventHandler(this.console_form_Load);
             this.ResumeLayout(false);
 
