@@ -69,6 +69,7 @@ namespace dvrat
             this.cpu_usage_label = new System.Windows.Forms.Label();
             this.selected_client_label = new System.Windows.Forms.Label();
             this.is_focus_label1 = new System.Windows.Forms.Label();
+            this.about_linkLabel1 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -406,16 +407,16 @@ namespace dvrat
             this.title_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.title_label.Location = new System.Drawing.Point(0, 2);
             this.title_label.Name = "title_label";
-            this.title_label.Size = new System.Drawing.Size(271, 13);
+            this.title_label.Size = new System.Drawing.Size(54, 13);
             this.title_label.TabIndex = 8;
-            this.title_label.Text = "dvRAT v0.1 | BY instagram (@JUSTALGHAMDI)";
+            this.title_label.Text = "dvRAT |";
             // 
             // current_time_label
             // 
             this.current_time_label.AutoSize = true;
             this.current_time_label.BackColor = System.Drawing.Color.Red;
             this.current_time_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.current_time_label.Location = new System.Drawing.Point(277, 2);
+            this.current_time_label.Location = new System.Drawing.Point(51, 3);
             this.current_time_label.Name = "current_time_label";
             this.current_time_label.Size = new System.Drawing.Size(92, 13);
             this.current_time_label.TabIndex = 9;
@@ -426,7 +427,7 @@ namespace dvrat
             this.mem_usage_label.AutoSize = true;
             this.mem_usage_label.BackColor = System.Drawing.Color.Red;
             this.mem_usage_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mem_usage_label.Location = new System.Drawing.Point(375, 2);
+            this.mem_usage_label.Location = new System.Drawing.Point(143, 3);
             this.mem_usage_label.Name = "mem_usage_label";
             this.mem_usage_label.Size = new System.Drawing.Size(134, 13);
             this.mem_usage_label.TabIndex = 9;
@@ -437,7 +438,7 @@ namespace dvrat
             this.cpu_usage_label.AutoSize = true;
             this.cpu_usage_label.BackColor = System.Drawing.Color.Red;
             this.cpu_usage_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cpu_usage_label.Location = new System.Drawing.Point(514, 2);
+            this.cpu_usage_label.Location = new System.Drawing.Point(279, 3);
             this.cpu_usage_label.Name = "cpu_usage_label";
             this.cpu_usage_label.Size = new System.Drawing.Size(82, 13);
             this.cpu_usage_label.TabIndex = 9;
@@ -448,7 +449,7 @@ namespace dvrat
             this.selected_client_label.AutoSize = true;
             this.selected_client_label.BackColor = System.Drawing.Color.Red;
             this.selected_client_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.selected_client_label.Location = new System.Drawing.Point(603, 3);
+            this.selected_client_label.Location = new System.Drawing.Point(362, 3);
             this.selected_client_label.Name = "selected_client_label";
             this.selected_client_label.Size = new System.Drawing.Size(136, 13);
             this.selected_client_label.TabIndex = 9;
@@ -459,11 +460,23 @@ namespace dvrat
             this.is_focus_label1.AutoSize = true;
             this.is_focus_label1.BackColor = System.Drawing.Color.Red;
             this.is_focus_label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.is_focus_label1.Location = new System.Drawing.Point(745, 3);
+            this.is_focus_label1.Location = new System.Drawing.Point(498, 3);
             this.is_focus_label1.Name = "is_focus_label1";
             this.is_focus_label1.Size = new System.Drawing.Size(105, 13);
             this.is_focus_label1.TabIndex = 9;
             this.is_focus_label1.Text = "IS_FOCUS [ true ]";
+            // 
+            // about_linkLabel1
+            // 
+            this.about_linkLabel1.AutoSize = true;
+            this.about_linkLabel1.LinkColor = System.Drawing.Color.White;
+            this.about_linkLabel1.Location = new System.Drawing.Point(136, 427);
+            this.about_linkLabel1.Name = "about_linkLabel1";
+            this.about_linkLabel1.Size = new System.Drawing.Size(50, 13);
+            this.about_linkLabel1.TabIndex = 7;
+            this.about_linkLabel1.TabStop = true;
+            this.about_linkLabel1.Text = "[ About ]";
+            this.about_linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.about_linkLabel1_LinkClicked);
             // 
             // Form1
             // 
@@ -477,6 +490,7 @@ namespace dvrat
             this.Controls.Add(this.mem_usage_label);
             this.Controls.Add(this.current_time_label);
             this.Controls.Add(this.title_label);
+            this.Controls.Add(this.about_linkLabel1);
             this.Controls.Add(this.builder_link_label);
             this.Controls.Add(this.log_link_label);
             this.Controls.Add(this.log_box);
@@ -542,6 +556,7 @@ namespace dvrat
         private System.Windows.Forms.DataGridViewTextBoxColumn isadmin;
         private System.Windows.Forms.DataGridViewTextBoxColumn _client_status;
         private System.Windows.Forms.Label is_focus_label1;
+        private System.Windows.Forms.LinkLabel about_linkLabel1;
     }
 }
 

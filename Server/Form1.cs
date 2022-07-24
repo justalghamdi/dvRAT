@@ -88,6 +88,11 @@ namespace dvrat
             this.WindowState = FormWindowState.Minimized;
         }
 
+        private void about_linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new AboutBox1().ShowDialog();
+        }
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
 
@@ -180,8 +185,7 @@ namespace dvrat
 
         private void builder_link_label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            builder_form build_form = new builder_form();
-            build_form.ShowDialog();
+            new builder_form().ShowDialog(); ;
         }
 
         private void messageBoxToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1033,9 +1037,10 @@ namespace dvrat
 
 
 
+
         /* END server functions */
         #endregion
 
-    
+
     }
 }
