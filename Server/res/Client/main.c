@@ -2,7 +2,6 @@
 // * dvRAT
 // * @copyright      Copyright (c) DEvil. (https://www.instagram.com/justalghamdi AKA https://www.github.com/justalghamdi)
 // * @author         justalghamdi
-// * @version        Release: 0.1
 // *
  
 #pragma region MACROS
