@@ -83,9 +83,9 @@ namespace dvrat
             this.uac_checkBox1.AutoSize = true;
             this.uac_checkBox1.Location = new System.Drawing.Point(7, 20);
             this.uac_checkBox1.Name = "uac_checkBox1";
-            this.uac_checkBox1.Size = new System.Drawing.Size(190, 17);
+            this.uac_checkBox1.Size = new System.Drawing.Size(166, 17);
             this.uac_checkBox1.TabIndex = 0;
-            this.uac_checkBox1.Text = "ADD UACBYPASS FUNC(WIN10 >)";
+            this.uac_checkBox1.Text = "UACBYPASS FUNC(WIN10 >)";
             this.uac_checkBox1.UseVisualStyleBackColor = true;
             // 
             // header_label
