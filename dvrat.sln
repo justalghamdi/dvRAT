@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSServer", "Server\CSServer.csproj", "{5561488E-ED7B-473D-9805-A19E425E65F7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cclient", "Server\res\Client\Cclient.vcxproj", "{4AFFE96C-56D9-4E68-A1F6-C93C820DCA75}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cclient", "Server\res\Client\Cclient\Cclient.vcxproj", "{4AFFE96C-56D9-4E68-A1F6-C93C820DCA75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
