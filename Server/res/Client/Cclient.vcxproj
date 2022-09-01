@@ -115,6 +115,8 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <ProgramDataBaseFileName>No</ProgramDataBaseFileName>
       <AdditionalOptions>/DEBUG:NONE %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
