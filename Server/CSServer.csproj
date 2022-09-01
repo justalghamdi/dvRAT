@@ -225,6 +225,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dv.ico" />
+    <None Include="res\ICO\web.png" />
     <None Include="res\ICO\new_folder.png" />
     <None Include="res\ICO\administrator.png" />
   </ItemGroup>

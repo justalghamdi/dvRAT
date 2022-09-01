@@ -58,6 +58,7 @@ namespace dvrat
             this.cHATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fILEEXPLORERToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uACBYPASSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openwebToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.socket_label = new System.Windows.Forms.Label();
             this.log_box = new System.Windows.Forms.ListBox();
             this.log_link_label = new System.Windows.Forms.LinkLabel();
@@ -263,9 +264,10 @@ namespace dvrat
             this.tASKMANEGARToolStripMenuItem,
             this.cHATToolStripMenuItem,
             this.fILEEXPLORERToolStripMenuItem,
-            this.uACBYPASSToolStripMenuItem});
+            this.uACBYPASSToolStripMenuItem,
+            this.openwebToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 158);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 202);
             // 
             // fUCKToolStripMenuItem
             // 
@@ -276,7 +278,7 @@ namespace dvrat
             this.fUCKToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.fUCKToolStripMenuItem.Image = global::dvrat.Resource1.FUCK;
             this.fUCKToolStripMenuItem.Name = "fUCKToolStripMenuItem";
-            this.fUCKToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.fUCKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.fUCKToolStripMenuItem.Text = "FUCK";
             // 
             // overWriteMBRToolStripMenuItem
@@ -294,7 +296,7 @@ namespace dvrat
             this.messageBoxToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.messageBoxToolStripMenuItem.Image = global::dvrat.Resource1.messagebox;
             this.messageBoxToolStripMenuItem.Name = "messageBoxToolStripMenuItem";
-            this.messageBoxToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.messageBoxToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.messageBoxToolStripMenuItem.Text = "MessageBox";
             this.messageBoxToolStripMenuItem.Click += new System.EventHandler(this.messageBoxToolStripMenuItem_Click);
             // 
@@ -304,7 +306,7 @@ namespace dvrat
             this.oPENCDROMToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.oPENCDROMToolStripMenuItem.Image = global::dvrat.Resource1.cd_rom;
             this.oPENCDROMToolStripMenuItem.Name = "oPENCDROMToolStripMenuItem";
-            this.oPENCDROMToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.oPENCDROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.oPENCDROMToolStripMenuItem.Text = "OPEN CD-ROM";
             this.oPENCDROMToolStripMenuItem.Click += new System.EventHandler(this.oPENCDROMToolStripMenuItem_Click);
             // 
@@ -314,7 +316,7 @@ namespace dvrat
             this.tASKMANEGARToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.tASKMANEGARToolStripMenuItem.Image = global::dvrat.Resource1.task_manager;
             this.tASKMANEGARToolStripMenuItem.Name = "tASKMANEGARToolStripMenuItem";
-            this.tASKMANEGARToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.tASKMANEGARToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tASKMANEGARToolStripMenuItem.Text = "TASK MANAGER";
             this.tASKMANEGARToolStripMenuItem.Click += new System.EventHandler(this.tASKMANEGARToolStripMenuItem_Click);
             // 
@@ -324,7 +326,7 @@ namespace dvrat
             this.cHATToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.cHATToolStripMenuItem.Image = global::dvrat.Resource1.CHAT;
             this.cHATToolStripMenuItem.Name = "cHATToolStripMenuItem";
-            this.cHATToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.cHATToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cHATToolStripMenuItem.Text = "CHAT";
             this.cHATToolStripMenuItem.Click += new System.EventHandler(this.cHATToolStripMenuItem_Click);
             // 
@@ -334,7 +336,7 @@ namespace dvrat
             this.fILEEXPLORERToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.fILEEXPLORERToolStripMenuItem.Image = global::dvrat.Resource1.file_explorer;
             this.fILEEXPLORERToolStripMenuItem.Name = "fILEEXPLORERToolStripMenuItem";
-            this.fILEEXPLORERToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.fILEEXPLORERToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.fILEEXPLORERToolStripMenuItem.Text = "FILE EXPLORER";
             this.fILEEXPLORERToolStripMenuItem.Click += new System.EventHandler(this.fILEEXPLORERToolStripMenuItem_Click);
             // 
@@ -344,9 +346,19 @@ namespace dvrat
             this.uACBYPASSToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.uACBYPASSToolStripMenuItem.Image = global::dvrat.Resource1.administrator;
             this.uACBYPASSToolStripMenuItem.Name = "uACBYPASSToolStripMenuItem";
-            this.uACBYPASSToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.uACBYPASSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.uACBYPASSToolStripMenuItem.Text = "UAC BY PASS";
             this.uACBYPASSToolStripMenuItem.Click += new System.EventHandler(this.uACBYPASSToolStripMenuItem_Click);
+            // 
+            // openwebToolStripMenuItem
+            // 
+            this.openwebToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.openwebToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.openwebToolStripMenuItem.Image = global::dvrat.Resource1.web;
+            this.openwebToolStripMenuItem.Name = "openwebToolStripMenuItem";
+            this.openwebToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openwebToolStripMenuItem.Text = "Open URL";
+            this.openwebToolStripMenuItem.Click += new System.EventHandler(this.openwebToolStripMenuItem_Click);
             // 
             // socket_label
             // 
@@ -557,6 +569,7 @@ namespace dvrat
         private System.Windows.Forms.DataGridViewTextBoxColumn _client_status;
         private System.Windows.Forms.Label is_focus_label1;
         private System.Windows.Forms.LinkLabel about_linkLabel1;
+        private System.Windows.Forms.ToolStripMenuItem openwebToolStripMenuItem;
     }
 }
 
