@@ -649,6 +649,7 @@ _start:;
 				if (send(s, dirs, strlen(dirs), 0) < 0)
 				{
 					WSACleanup();
+					closesocket(s);
 					goto _start;
 				}
 				
