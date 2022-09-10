@@ -91,7 +91,7 @@ namespace dvrat
             {
                 MessageBox.Show("Error while request kill PID !");
             }
-        do_nothing:;
+        do_nothing: KILL_PID = "kill_pid;";
         }
 
         private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
