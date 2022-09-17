@@ -19,7 +19,7 @@ namespace dvrat
 
         private void AboutBox1_Load(object sender, EventArgs e)
         {
-
+            label2.Text = $"Version: {this.ProductVersion}";
         }
 
         private void label2_Click(object sender, EventArgs e)
