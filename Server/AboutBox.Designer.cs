@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class AboutBox1
+    partial class AboutBox
     {
         /// <summary>
         /// Required designer variable.

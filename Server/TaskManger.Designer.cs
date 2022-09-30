@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class tsk_mgr_view
+    partial class TaskManger
     {
         /// <summary>
         /// Required designer variable.
@@ -123,7 +123,7 @@ namespace dvrat
             // 
             this.kILLToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.kILLToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.kILLToolStripMenuItem.Image = global::dvrat.Resource1.KILL;
+            this.kILLToolStripMenuItem.Image = global::dvrat.ResourceFile.KILL;
             this.kILLToolStripMenuItem.Name = "kILLToolStripMenuItem";
             this.kILLToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.kILLToolStripMenuItem.Text = "KILL";

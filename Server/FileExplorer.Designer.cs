@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class file_explorer_form
+    partial class FileExplorer
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace dvrat
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ColumnHeader _name;
             System.Windows.Forms.ColumnHeader columnHeader1;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(file_explorer_form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileExplorer));
             this.listView1 = new System.Windows.Forms.ListView();
             this._type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.manage_files_contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,12 +41,12 @@ namespace dvrat
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.listView2 = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.path_label = new System.Windows.Forms.Label();
             this.err_label = new System.Windows.Forms.Label();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             _name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.manage_files_contextMenuStrip1.SuspendLayout();
@@ -107,7 +107,7 @@ namespace dvrat
             // 
             this.deleteToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.deleteToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.deleteToolStripMenuItem.Image = global::dvrat.Resource1.delete;
+            this.deleteToolStripMenuItem.Image = global::dvrat.ResourceFile.delete;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.deleteToolStripMenuItem.Text = "delete";
@@ -117,7 +117,7 @@ namespace dvrat
             // 
             this.renameToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.renameToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.renameToolStripMenuItem.Image = global::dvrat.Resource1.rename;
+            this.renameToolStripMenuItem.Image = global::dvrat.ResourceFile.rename;
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             this.renameToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.renameToolStripMenuItem.Text = "rename";
@@ -127,7 +127,7 @@ namespace dvrat
             // 
             this.refreshToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.refreshToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.refreshToolStripMenuItem.Image = global::dvrat.Resource1.refresh;
+            this.refreshToolStripMenuItem.Image = global::dvrat.ResourceFile.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.refreshToolStripMenuItem.Text = "refresh";
@@ -137,7 +137,7 @@ namespace dvrat
             // 
             this.newfileToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.newfileToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.newfileToolStripMenuItem.Image = global::dvrat.Resource1.new_file;
+            this.newfileToolStripMenuItem.Image = global::dvrat.ResourceFile.new_file;
             this.newfileToolStripMenuItem.Name = "newfileToolStripMenuItem";
             this.newfileToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.newfileToolStripMenuItem.Text = "new file";
@@ -147,11 +147,19 @@ namespace dvrat
             // 
             this.newFolderToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.newFolderToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.newFolderToolStripMenuItem.Image = global::dvrat.Resource1.new_folder;
+            this.newFolderToolStripMenuItem.Image = global::dvrat.ResourceFile.new_folder;
             this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
             this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.newFolderToolStripMenuItem.Text = "new folder";
             this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "unknown_file.png");
+            this.imageList1.Images.SetKeyName(1, "folder.png");
+            this.imageList1.Images.SetKeyName(2, "hard_drive.png");
             // 
             // listView2
             // 
@@ -209,15 +217,7 @@ namespace dvrat
             this.err_label.TabIndex = 2;
             this.err_label.Click += new System.EventHandler(this.label1_Click);
             // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "unknown_file.png");
-            this.imageList1.Images.SetKeyName(1, "folder.png");
-            this.imageList1.Images.SetKeyName(2, "hard_drive.png");
-            // 
-            // file_explorer_form
+            // FileExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -228,7 +228,8 @@ namespace dvrat
             this.Controls.Add(this.listView2);
             this.Controls.Add(this.listView1);
             this.ForeColor = System.Drawing.Color.White;
-            this.Name = "file_explorer_form";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Name = "FileExplorer";
             this.Text = "File Explorer";
             this.Load += new System.EventHandler(this.file_explorer_form_Load);
             this.manage_files_contextMenuStrip1.ResumeLayout(false);

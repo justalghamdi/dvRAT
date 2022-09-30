@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class config_message_box
+    partial class ConfigMessageBox
     {
         /// <summary>
         /// Required designer variable.

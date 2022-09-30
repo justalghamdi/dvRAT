@@ -160,14 +160,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DVpro.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="RDP.c" />
+    <ClCompile Include="Shared.c" />
     <ClCompile Include="template.c" />
-    <ClCompile Include="_win_form.c" />
-    <ClCompile Include="_http_request.c" />
+    <ClCompile Include="WinForm.c" />
+    <ClCompile Include="HttpRequester.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="_http_request.h" />
-    <ClInclude Include="_win_form.h" />
+    <ClInclude Include="DVpro.h" />
+    <ClInclude Include="RDP.h" />
+    <ClInclude Include="Shared.h" />
+    <ClInclude Include="HttpRequester.h" />
+    <ClInclude Include="WinForm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

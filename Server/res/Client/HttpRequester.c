@@ -5,18 +5,14 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
-#include "_http_request.h"
+#include "HttpRequester.h"
 
 
 //TODO: move function to main
 char* get_via_socket(char* request, char* ip) {
-    WSADATA wsa;
     SOCKET s;
     int recv_size = 0;
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-    {
-        return NULL;
-    }
+
     if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
     {
         return NULL;

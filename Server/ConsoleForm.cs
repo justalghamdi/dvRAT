@@ -12,9 +12,9 @@ using System.Windows.Forms;
 
 namespace dvrat
 {
-    public partial class console_form : Form
+    public partial class ConsoleForm : Form
     {
-        public console_form()
+        public ConsoleForm()
         {
             InitializeComponent();
 

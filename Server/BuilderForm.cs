@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace dvrat
 {
-    public partial class builder_form : Form
+    public partial class BuilderForm : Form
     {
-        public builder_form()
+        public BuilderForm()
         {
             InitializeComponent();
         }
@@ -61,7 +61,7 @@ namespace dvrat
 
         private void build_button_Click(object sender, EventArgs e)
         {
-            console_form cnsl_frm = new console_form();
+            ConsoleForm cnsl_frm = new ConsoleForm();
             this.Hide();
             cnsl_frm.compiler = this.compiler_path;
             cnsl_frm.proj_path = this.proj_path;

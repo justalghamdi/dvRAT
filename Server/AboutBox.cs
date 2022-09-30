@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace dvrat
 {
-    partial class AboutBox1 : Form
+    partial class AboutBox : Form
     {
-        public AboutBox1()
+        public AboutBox()
         {
             InitializeComponent();
         }

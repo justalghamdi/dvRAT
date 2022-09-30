@@ -39,7 +39,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -66,47 +66,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox1.cs">
+    <Compile Include="AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox1.Designer.cs">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="builder_form.cs">
+    <Compile Include="BuilderForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="builder_form.Designer.cs">
-      <DependentUpon>builder_form.cs</DependentUpon>
+    <Compile Include="BuilderForm.Designer.cs">
+      <DependentUpon>BuilderForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="chat_form.cs">
+    <Compile Include="ChatForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="chat_form.Designer.cs">
-      <DependentUpon>chat_form.cs</DependentUpon>
+    <Compile Include="ChatForm.Designer.cs">
+      <DependentUpon>ChatForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="config_message_box.cs">
+    <Compile Include="ConfigMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="config_message_box.Designer.cs">
-      <DependentUpon>config_message_box.cs</DependentUpon>
+    <Compile Include="ConfigMessageBox.Designer.cs">
+      <DependentUpon>ConfigMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="console_form.cs">
+    <Compile Include="ConsoleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="console_form.Designer.cs">
-      <DependentUpon>console_form.cs</DependentUpon>
+    <Compile Include="ConsoleForm.Designer.cs">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="file_explorer_form.cs">
+    <Compile Include="FileExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="file_explorer_form.Designer.cs">
-      <DependentUpon>file_explorer_form.cs</DependentUpon>
+    <Compile Include="FileExplorer.Designer.cs">
+      <DependentUpon>FileExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="modules\rename_dialog.cs">
       <SubType>Form</SubType>
@@ -116,37 +116,49 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource1.resx</DependentUpon>
-    </Compile>
-    <Compile Include="tsk_mgr_view.cs">
+    <Compile Include="RemoteDesktop.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="tsk_mgr_view.Designer.cs">
-      <DependentUpon>tsk_mgr_view.cs</DependentUpon>
+    <Compile Include="RemoteDesktop.Designer.cs">
+      <DependentUpon>RemoteDesktop.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AboutBox1.resx">
-      <DependentUpon>AboutBox1.cs</DependentUpon>
+    <Compile Include="ResourceFile.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceFile.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StatusForm.Designer.cs">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TaskManger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TaskManger.Designer.cs">
+      <DependentUpon>TaskManger.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="builder_form.resx">
-      <DependentUpon>builder_form.cs</DependentUpon>
+    <EmbeddedResource Include="BuilderForm.resx">
+      <DependentUpon>BuilderForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="chat_form.resx">
-      <DependentUpon>chat_form.cs</DependentUpon>
+    <EmbeddedResource Include="ChatForm.resx">
+      <DependentUpon>ChatForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="config_message_box.resx">
-      <DependentUpon>config_message_box.cs</DependentUpon>
+    <EmbeddedResource Include="ConfigMessageBox.resx">
+      <DependentUpon>ConfigMessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="console_form.resx">
-      <DependentUpon>console_form.cs</DependentUpon>
+    <EmbeddedResource Include="ConsoleForm.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="file_explorer_form.resx">
-      <DependentUpon>file_explorer_form.cs</DependentUpon>
+    <EmbeddedResource Include="FileExplorer.resx">
+      <DependentUpon>FileExplorer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="modules\rename_dialog.resx">
@@ -162,12 +174,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Resource1.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="RemoteDesktop.resx">
+      <DependentUpon>RemoteDesktop.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="tsk_mgr_view.resx">
-      <DependentUpon>tsk_mgr_view.cs</DependentUpon>
+    <EmbeddedResource Include="ResourceFile.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourceFile.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StatusForm.resx">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaskManger.resx">
+      <DependentUpon>TaskManger.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -225,6 +243,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dv.ico" />
+    <None Include="res\ICO\refresh2.png" />
+    <None Include="res\ICO\rdp.png" />
     <None Include="res\ICO\web.png" />
     <None Include="res\ICO\new_folder.png" />
     <None Include="res\ICO\administrator.png" />

@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +33,7 @@ namespace dvrat
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.header_1 = new System.Windows.Forms.Label();
             this.exit_x_label = new System.Windows.Forms.Label();
             this.minimized_label = new System.Windows.Forms.Label();
@@ -59,6 +59,8 @@ namespace dvrat
             this.fILEEXPLORERToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uACBYPASSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openwebToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rDPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.socket_label = new System.Windows.Forms.Label();
             this.log_box = new System.Windows.Forms.ListBox();
             this.log_link_label = new System.Windows.Forms.LinkLabel();
@@ -71,8 +73,13 @@ namespace dvrat
             this.selected_client_label = new System.Windows.Forms.Label();
             this.is_focus_label1 = new System.Windows.Forms.Label();
             this.about_linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.status_form_label = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // header_1
@@ -265,9 +272,11 @@ namespace dvrat
             this.cHATToolStripMenuItem,
             this.fILEEXPLORERToolStripMenuItem,
             this.uACBYPASSToolStripMenuItem,
-            this.openwebToolStripMenuItem});
+            this.openwebToolStripMenuItem,
+            this.rDPToolStripMenuItem,
+            this.refreshToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 202);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 224);
             // 
             // fUCKToolStripMenuItem
             // 
@@ -276,16 +285,16 @@ namespace dvrat
             this.overWriteMBRToolStripMenuItem});
             this.fUCKToolStripMenuItem.Enabled = false;
             this.fUCKToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.fUCKToolStripMenuItem.Image = global::dvrat.Resource1.FUCK;
+            this.fUCKToolStripMenuItem.Image = global::dvrat.ResourceFile.FUCK;
             this.fUCKToolStripMenuItem.Name = "fUCKToolStripMenuItem";
-            this.fUCKToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fUCKToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.fUCKToolStripMenuItem.Text = "FUCK";
             // 
             // overWriteMBRToolStripMenuItem
             // 
             this.overWriteMBRToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.overWriteMBRToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.overWriteMBRToolStripMenuItem.Image = global::dvrat.Resource1.hardware;
+            this.overWriteMBRToolStripMenuItem.Image = global::dvrat.ResourceFile.hardware;
             this.overWriteMBRToolStripMenuItem.Name = "overWriteMBRToolStripMenuItem";
             this.overWriteMBRToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.overWriteMBRToolStripMenuItem.Text = "OverWriteMBR";
@@ -294,9 +303,9 @@ namespace dvrat
             // 
             this.messageBoxToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.messageBoxToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.messageBoxToolStripMenuItem.Image = global::dvrat.Resource1.messagebox;
+            this.messageBoxToolStripMenuItem.Image = global::dvrat.ResourceFile.messagebox;
             this.messageBoxToolStripMenuItem.Name = "messageBoxToolStripMenuItem";
-            this.messageBoxToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.messageBoxToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.messageBoxToolStripMenuItem.Text = "MessageBox";
             this.messageBoxToolStripMenuItem.Click += new System.EventHandler(this.messageBoxToolStripMenuItem_Click);
             // 
@@ -304,9 +313,9 @@ namespace dvrat
             // 
             this.oPENCDROMToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.oPENCDROMToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.oPENCDROMToolStripMenuItem.Image = global::dvrat.Resource1.cd_rom;
+            this.oPENCDROMToolStripMenuItem.Image = global::dvrat.ResourceFile.cd_rom;
             this.oPENCDROMToolStripMenuItem.Name = "oPENCDROMToolStripMenuItem";
-            this.oPENCDROMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.oPENCDROMToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.oPENCDROMToolStripMenuItem.Text = "OPEN CD-ROM";
             this.oPENCDROMToolStripMenuItem.Click += new System.EventHandler(this.oPENCDROMToolStripMenuItem_Click);
             // 
@@ -314,9 +323,9 @@ namespace dvrat
             // 
             this.tASKMANEGARToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.tASKMANEGARToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.tASKMANEGARToolStripMenuItem.Image = global::dvrat.Resource1.task_manager;
+            this.tASKMANEGARToolStripMenuItem.Image = global::dvrat.ResourceFile.task_manager;
             this.tASKMANEGARToolStripMenuItem.Name = "tASKMANEGARToolStripMenuItem";
-            this.tASKMANEGARToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tASKMANEGARToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.tASKMANEGARToolStripMenuItem.Text = "TASK MANAGER";
             this.tASKMANEGARToolStripMenuItem.Click += new System.EventHandler(this.tASKMANEGARToolStripMenuItem_Click);
             // 
@@ -324,9 +333,9 @@ namespace dvrat
             // 
             this.cHATToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.cHATToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.cHATToolStripMenuItem.Image = global::dvrat.Resource1.CHAT;
+            this.cHATToolStripMenuItem.Image = global::dvrat.ResourceFile.CHAT;
             this.cHATToolStripMenuItem.Name = "cHATToolStripMenuItem";
-            this.cHATToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cHATToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.cHATToolStripMenuItem.Text = "CHAT";
             this.cHATToolStripMenuItem.Click += new System.EventHandler(this.cHATToolStripMenuItem_Click);
             // 
@@ -334,9 +343,9 @@ namespace dvrat
             // 
             this.fILEEXPLORERToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.fILEEXPLORERToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.fILEEXPLORERToolStripMenuItem.Image = global::dvrat.Resource1.file_explorer;
+            this.fILEEXPLORERToolStripMenuItem.Image = global::dvrat.ResourceFile.file_explorer;
             this.fILEEXPLORERToolStripMenuItem.Name = "fILEEXPLORERToolStripMenuItem";
-            this.fILEEXPLORERToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fILEEXPLORERToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.fILEEXPLORERToolStripMenuItem.Text = "FILE EXPLORER";
             this.fILEEXPLORERToolStripMenuItem.Click += new System.EventHandler(this.fILEEXPLORERToolStripMenuItem_Click);
             // 
@@ -344,9 +353,9 @@ namespace dvrat
             // 
             this.uACBYPASSToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.uACBYPASSToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.uACBYPASSToolStripMenuItem.Image = global::dvrat.Resource1.administrator;
+            this.uACBYPASSToolStripMenuItem.Image = global::dvrat.ResourceFile.administrator;
             this.uACBYPASSToolStripMenuItem.Name = "uACBYPASSToolStripMenuItem";
-            this.uACBYPASSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.uACBYPASSToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.uACBYPASSToolStripMenuItem.Text = "UAC BY PASS";
             this.uACBYPASSToolStripMenuItem.Click += new System.EventHandler(this.uACBYPASSToolStripMenuItem_Click);
             // 
@@ -354,11 +363,31 @@ namespace dvrat
             // 
             this.openwebToolStripMenuItem.BackColor = System.Drawing.Color.Black;
             this.openwebToolStripMenuItem.ForeColor = System.Drawing.Color.White;
-            this.openwebToolStripMenuItem.Image = global::dvrat.Resource1.web;
+            this.openwebToolStripMenuItem.Image = global::dvrat.ResourceFile.web;
             this.openwebToolStripMenuItem.Name = "openwebToolStripMenuItem";
-            this.openwebToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openwebToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.openwebToolStripMenuItem.Text = "Open URL";
             this.openwebToolStripMenuItem.Click += new System.EventHandler(this.openwebToolStripMenuItem_Click);
+            // 
+            // rDPToolStripMenuItem
+            // 
+            this.rDPToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.rDPToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.rDPToolStripMenuItem.Image = global::dvrat.ResourceFile.rdp;
+            this.rDPToolStripMenuItem.Name = "rDPToolStripMenuItem";
+            this.rDPToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.rDPToolStripMenuItem.Text = "RDP";
+            this.rDPToolStripMenuItem.Click += new System.EventHandler(this.rDPToolStripMenuItem_Click);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.refreshToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.refreshToolStripMenuItem.Image = global::dvrat.ResourceFile.refresh2;
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // socket_label
             // 
@@ -441,16 +470,16 @@ namespace dvrat
             this.mem_usage_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mem_usage_label.Location = new System.Drawing.Point(143, 3);
             this.mem_usage_label.Name = "mem_usage_label";
-            this.mem_usage_label.Size = new System.Drawing.Size(134, 13);
+            this.mem_usage_label.Size = new System.Drawing.Size(90, 13);
             this.mem_usage_label.TabIndex = 9;
-            this.mem_usage_label.Text = "Mem_Usage [ 999MB ]";
+            this.mem_usage_label.Text = "RAM [ 999MB ]";
             // 
             // cpu_usage_label
             // 
             this.cpu_usage_label.AutoSize = true;
             this.cpu_usage_label.BackColor = System.Drawing.Color.Red;
             this.cpu_usage_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cpu_usage_label.Location = new System.Drawing.Point(279, 3);
+            this.cpu_usage_label.Location = new System.Drawing.Point(239, 3);
             this.cpu_usage_label.Name = "cpu_usage_label";
             this.cpu_usage_label.Size = new System.Drawing.Size(82, 13);
             this.cpu_usage_label.TabIndex = 9;
@@ -461,7 +490,7 @@ namespace dvrat
             this.selected_client_label.AutoSize = true;
             this.selected_client_label.BackColor = System.Drawing.Color.Red;
             this.selected_client_label.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.selected_client_label.Location = new System.Drawing.Point(362, 3);
+            this.selected_client_label.Location = new System.Drawing.Point(327, 3);
             this.selected_client_label.Name = "selected_client_label";
             this.selected_client_label.Size = new System.Drawing.Size(136, 13);
             this.selected_client_label.TabIndex = 9;
@@ -472,7 +501,7 @@ namespace dvrat
             this.is_focus_label1.AutoSize = true;
             this.is_focus_label1.BackColor = System.Drawing.Color.Red;
             this.is_focus_label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.is_focus_label1.Location = new System.Drawing.Point(498, 3);
+            this.is_focus_label1.Location = new System.Drawing.Point(469, 3);
             this.is_focus_label1.Name = "is_focus_label1";
             this.is_focus_label1.Size = new System.Drawing.Size(105, 13);
             this.is_focus_label1.TabIndex = 9;
@@ -490,12 +519,52 @@ namespace dvrat
             this.about_linkLabel1.Text = "[ About ]";
             this.about_linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.about_linkLabel1_LinkClicked);
             // 
-            // Form1
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showToolStripMenuItem,
+            this.closeToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(104, 48);
+            // 
+            // showToolStripMenuItem
+            // 
+            this.showToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.showToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.showToolStripMenuItem.Name = "showToolStripMenuItem";
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.showToolStripMenuItem.Text = "Show";
+            this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.closeToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            // 
+            // status_form_label
+            // 
+            this.status_form_label.ActiveLinkColor = System.Drawing.Color.White;
+            this.status_form_label.AutoSize = true;
+            this.status_form_label.LinkColor = System.Drawing.Color.White;
+            this.status_form_label.Location = new System.Drawing.Point(192, 427);
+            this.status_form_label.Name = "status_form_label";
+            this.status_form_label.Size = new System.Drawing.Size(79, 13);
+            this.status_form_label.TabIndex = 10;
+            this.status_form_label.TabStop = true;
+            this.status_form_label.Text = "[ Status Form ]";
+            this.status_form_label.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.status_form_label_LinkClicked);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1368, 450);
+            this.Controls.Add(this.status_form_label);
             this.Controls.Add(this.is_focus_label1);
             this.Controls.Add(this.selected_client_label);
             this.Controls.Add(this.cpu_usage_label);
@@ -519,13 +588,14 @@ namespace dvrat
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "dvRAT v0.1";
+            this.Name = "MainForm";
+            this.Text = "Devil R.A.T";
             this.Activated += new System.EventHandler(this.Form1_Activated);
             this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -570,6 +640,12 @@ namespace dvrat
         private System.Windows.Forms.Label is_focus_label1;
         private System.Windows.Forms.LinkLabel about_linkLabel1;
         private System.Windows.Forms.ToolStripMenuItem openwebToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem showToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rDPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel status_form_label;
     }
 }
 

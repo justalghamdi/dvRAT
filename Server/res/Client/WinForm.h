@@ -7,4 +7,4 @@ typedef struct data {
 	HINSTANCE* hInstance;
 } DATA;
 
-DWORD WINAPI show_chat_form(DATA *_data);
+DWORD CALLBACK show_chat_form(DATA *_data);

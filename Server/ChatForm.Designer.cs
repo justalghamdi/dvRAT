@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class chat_form
+    partial class ChatForm
     {
         /// <summary>
         /// Required designer variable.

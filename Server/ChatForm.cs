@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace dvrat
 {
-    public partial class chat_form : Form
+    public partial class ChatForm : Form
     {
-        Form1 _parent;
+        MainForm _parent;
         Socket _s;
         
-        public chat_form(Socket s,Form1 parent)
+        public ChatForm(Socket s,MainForm parent)
         {
             this._s = s;
             this._parent = parent;

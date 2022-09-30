@@ -18,21 +18,39 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_http_request.c">
+    <ClCompile Include="HttpRequester.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="_win_form.c">
+    <ClCompile Include="WinForm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="template.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DVpro.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RDP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="_http_request.h">
+    <ClInclude Include="HttpRequester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_win_form.h">
+    <ClInclude Include="WinForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DVpro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RDP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

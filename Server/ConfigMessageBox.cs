@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace dvrat
 {
-    public partial class config_message_box : Form
+    public partial class ConfigMessageBox : Form
     {
-        private Form1 _parent;
+        private MainForm _parent;
         private Socket _client;
-        public config_message_box(Socket client,Form1 parent)
+        public ConfigMessageBox(Socket client,MainForm parent)
         {
             InitializeComponent();
             this._parent = parent;

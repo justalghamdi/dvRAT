@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class builder_form
+    partial class BuilderForm
     {
         /// <summary>
         /// Required designer variable.

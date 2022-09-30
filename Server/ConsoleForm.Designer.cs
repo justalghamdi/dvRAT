@@ -1,7 +1,7 @@
 ﻿
 namespace dvrat
 {
-    partial class console_form
+    partial class ConsoleForm
     {
         /// <summary>
         /// Required designer variable.

