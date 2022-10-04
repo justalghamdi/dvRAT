@@ -130,8 +130,7 @@ namespace dvrat
             {
                 int X = (int)((float)e.X * (float)((float)bmsize.Width / (float)FrameHandler.Width));
                 int Y = (int)((float)e.Y * (float)((float)bmsize.Height / (float)FrameHandler.Height));
-                pp = new Point(X, Y);
-                client.Send(Encoding.Default.GetBytes($"rdp_mm;\n{pp.X}\n{pp.Y}"));
+                client.Send(Encoding.Default.GetBytes($"rdp_mm;\n{X}\n{Y}"));
 
                 //label1.Text = $"X = {PP.X} | Y = {PP.Y} | img.Width = {bm.Width} | img.Height = {bm.Height} | pictureBox1.Width = {pictureBox1.Width} | pictureBox1.Height = {pictureBox1.Height} | e.X = {e.X } | e.Y = {e.Y}";
                 GC.Collect();
@@ -179,14 +178,13 @@ namespace dvrat
                 {
                     int X = (int)((float)e.X * (float)((float)bmsize.Width / (float)FrameHandler.Width));
                     int Y = (int)((float)e.Y * (float)((float)bmsize.Height / (float)FrameHandler.Height));
-                    pp = new Point(X, Y);
                     if (e.Button == MouseButtons.Left)
                     {
-                        this.parent.send_to_client(this.client, $"rdp_pl;\n{pp.X}\n{pp.Y}");
+                        this.parent.send_to_client(this.client, $"rdp_pl;\n{X}\n{Y}");
                     }
                     else if (e.Button == MouseButtons.Right)
                     {
-                        this.parent.send_to_client(this.client, $"rdp_pr;\n{pp.X}\n{pp.Y}");
+                        this.parent.send_to_client(this.client, $"rdp_pr;\n{X}\n{Y}");
 
 
                     }
@@ -209,16 +207,15 @@ namespace dvrat
                 {
                     int X = (int)((float)e.X * (float)((float)bmsize.Width / (float)FrameHandler.Width));
                     int Y = (int)((float)e.Y * (float)((float)bmsize.Height / (float)FrameHandler.Height));
-                    pp = new Point(X, Y);
                     if (e.Button == MouseButtons.Left)
                     {
-                            this.parent.send_to_client(this.client, $"rdp_rl;\n{pp.X}\n{pp.Y}");
+                            this.parent.send_to_client(this.client, $"rdp_rl;\n{X}\n{Y}");
                             Thread.Sleep(50);
 
                     }
                     else if (e.Button == MouseButtons.Right)
                     {
-                            this.parent.send_to_client(this.client, $"rdp_rr;\n{pp.X}\n{pp.Y}");
+                            this.parent.send_to_client(this.client, $"rdp_rr;\n{X}\n{Y}");
                             Thread.Sleep(50);
 
                     }
