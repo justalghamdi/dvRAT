@@ -43,7 +43,8 @@ namespace dvrat
         private int AllConn = 0;
         private int AllDisconn = 0;
         private StatusForm stf = new StatusForm();
-
+        private Stopwatch stopwatch = new Stopwatch();
+        private DateTime start_time;
         #endregion
 
         #region form functions
@@ -176,8 +177,10 @@ namespace dvrat
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
+            start_time = DateTime.Now;
+            stopwatch.Start();
             dvrat_folder = $"Devil R.A.T {ProductVersion}";
             if (!Directory.Exists(dvrat_folder))
             {
@@ -225,22 +228,28 @@ namespace dvrat
 
         private void status_form_label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!is_form_opened("StatusForm"))
+            try
             {
-                stf = new StatusForm();
-                stf.Show();
-                new Thread(new ThreadStart(() =>
+                if (!is_form_opened("StatusForm"))
                 {
-                    while (is_form_opened("StatusForm"))
+                    stf = new StatusForm();
+                    stf.Show();
+                    new Thread(new ThreadStart(() =>
                     {
-                        stf.SetStatus(AllRecv, AllSend, AllConn, AllDisconn);
-                        Thread.Sleep(1000);
-                    }
-                })).Start();
-            }
-            else
+                        while (is_form_opened("StatusForm"))
+                        {
+                            stf.SetStatus(AllRecv, AllSend, AllConn, AllDisconn, start_time.ToString("yyyy-MM-dd HH:mm:ss").Replace('-', '/'),stopwatch.Elapsed.ToString("hh\\:mm\\:ss"));
+                            Thread.Sleep(950);
+                        }
+                    })).Start();
+                }
+                else
+                {
+                    stf.Focus();
+                }
+            }catch(Exception ex)
             {
-                stf.Focus();
+                error_log_file(ex.ToString());
             }
         }
 
@@ -1461,9 +1470,10 @@ namespace dvrat
         }
 
 
+
         /* END server functions */
         #endregion
 
-    
+   
     }      
 }
